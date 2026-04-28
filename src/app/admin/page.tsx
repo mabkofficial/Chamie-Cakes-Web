@@ -10,13 +10,18 @@ declare global {
 
 export default function AdminPage() {
   useEffect(() => {
-    // Dynamically load the CMS script
-    const script = document.createElement("script");
-    script.src = "https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js";
-    script.async = true;
-    document.body.appendChild(script);
+    // Load Identity script specifically for this page to be safe
+    const idScript = document.createElement("script");
+    idScript.src = "https://identity.netlify.com/v1/netlify-identity-widget.js";
+    idScript.async = true;
+    document.head.appendChild(idScript);
 
-    // Initialize Identity if needed
+    // Load CMS script
+    const cmsScript = document.createElement("script");
+    cmsScript.src = "https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js";
+    cmsScript.async = true;
+    document.body.appendChild(cmsScript);
+
     const initIdentity = () => {
       if (window.netlifyIdentity) {
         window.netlifyIdentity.on("init", (user: any) => {
@@ -29,20 +34,11 @@ export default function AdminPage() {
       }
     };
 
-    if (window.netlifyIdentity) {
-      initIdentity();
-    } else {
-      // Wait for layout script to load if not yet ready
-      const identityScript = document.querySelector('script[src*="netlify-identity-widget.js"]');
-      if (identityScript) {
-        identityScript.addEventListener('load', initIdentity);
-      }
-    }
+    idScript.addEventListener('load', initIdentity);
 
     return () => {
-      if (document.body.contains(script)) {
-        document.body.removeChild(script);
-      }
+      if (document.head.contains(idScript)) document.head.removeChild(idScript);
+      if (document.body.contains(cmsScript)) document.body.removeChild(cmsScript);
     };
   }, []);
 
