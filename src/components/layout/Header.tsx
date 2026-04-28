@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Menu, X, Phone, Mail, Instagram, Facebook } from "lucide-react";
+import { Menu, X, Phone, Mail } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { SITE_CONFIG } from "@/lib/config";
 import { cn } from "@/lib/utils";
@@ -59,8 +59,8 @@ export default function Header({ className }: { className?: string }) {
               <span className="hidden sm:inline">Dallas / Fort Worth Metroplex</span>
             </div>
             <div className="flex gap-6">
-               <a href={SITE_CONFIG.socialLinks?.instagram} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Instagram</a>
-               <a href={SITE_CONFIG.socialLinks?.facebook} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Facebook</a>
+               <a href={SITE_CONFIG.contact.instagram} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Instagram</a>
+               <a href={SITE_CONFIG.contact.facebook} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Facebook</a>
             </div>
           </div>
         </div>
@@ -142,8 +142,8 @@ export default function Header({ className }: { className?: string }) {
                <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-slate-300">Get in Touch</p>
                <a href={`tel:${SITE_CONFIG.contact.phone}`} className="text-xl font-heading font-bold">{SITE_CONFIG.contact.phone}</a>
                <div className="flex gap-6 mt-4">
-                  <a href={SITE_CONFIG.socialLinks?.instagram} className="text-slate-400 hover:text-black">Instagram</a>
-                  <a href={SITE_CONFIG.socialLinks?.facebook} className="text-slate-400 hover:text-black">Facebook</a>
+                  <a href={SITE_CONFIG.contact.instagram} className="text-slate-400 hover:text-black">Instagram</a>
+                  <a href={SITE_CONFIG.contact.facebook} className="text-slate-400 hover:text-black">Facebook</a>
                </div>
             </div>
           </motion.div>
