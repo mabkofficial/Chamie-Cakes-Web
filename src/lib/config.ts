@@ -1,5 +1,6 @@
 export const SITE_CONFIG = {
   name: "Chamie Cakes",
+  domain: "chamiecakes.com",
   description: "Custom Cakes for Life's Sweetest Moments in Dallas/Fort Worth.",
   contact: {
     phone: "713.269.3696",
