@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { PhoneCall } from "lucide-react";
 
-export default function CTABanner() {
+export default function CTABanner({ phone = "713.269.3696" }: { phone?: string }) {
   return (
     <section className="py-24 bg-primary/10 border-t border-primary/20" aria-labelledby="cta-heading">
       <div className="container mx-auto px-4">
@@ -39,7 +39,7 @@ export default function CTABanner() {
           <div className="flex items-center justify-center gap-3 text-muted-foreground text-lg">
             <PhoneCall className="w-5 h-5 text-primary" />
             <p>
-              Or call Chamie directly at <a href="tel:7132693696" className="text-foreground font-semibold hover:text-primary transition-colors hover:underline decoration-primary underline-offset-4">713.269.3696</a>
+              Or call Chamie directly at <a href={`tel:${phone.replace(/\./g, '')}`} className="text-foreground font-semibold hover:text-primary transition-colors hover:underline decoration-primary underline-offset-4">{phone}</a>
             </p>
           </div>
         </motion.div>

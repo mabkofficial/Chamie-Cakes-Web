@@ -7,7 +7,13 @@ import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Star } from "lucide-react";
 
-export default function HeroSection() {
+export default function HeroSection({ 
+  title = "Custom Cakes for Life's Sweetest Moments", 
+  subtitle = "Handcrafted in Dallas/Fort Worth. Beautifully designed, uniquely flavored." 
+}: { 
+  title?: string; 
+  subtitle?: string; 
+}) {
   return (
     <section className="relative w-full h-[90vh] flex items-center justify-center overflow-hidden bg-background">
       {/* Background Image */}
@@ -47,7 +53,12 @@ export default function HeroSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
         >
-          Custom Cakes for Life's <br className="hidden md:block"/> Sweetest Moments
+          {title.split('<br />').map((text, i) => (
+            <span key={i}>
+              {text}
+              {i < title.split('<br />').length - 1 && <br className="hidden md:block" />}
+            </span>
+          ))}
         </motion.h1>
         
         <motion.p 
@@ -56,7 +67,7 @@ export default function HeroSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
         >
-          Handcrafted in Dallas/Fort Worth. Beautifully designed, uniquely flavored.
+          {subtitle}
         </motion.p>
         
 

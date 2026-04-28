@@ -7,6 +7,40 @@ media_folder: "public/images/cakes"
 public_folder: "/images/cakes"
 
 collections:
+  - name: "pages"
+    label: "Pages"
+    files:
+      - file: "src/content/pages/home.md"
+        label: "Home Page"
+        name: "home"
+        fields:
+          - { label: "Hero Title", name: "heroTitle", widget: "string" }
+          - { label: "Hero Subtitle", name: "heroSubtitle", widget: "text" }
+          - { label: "Section: Specialties Title", name: "specialtiesTitle", widget: "string" }
+          - { label: "Section: Specialties Intro", name: "specialtiesIntro", widget: "text" }
+      - file: "src/content/pages/about.md"
+        label: "About Page"
+        name: "about"
+        fields:
+          - { label: "Story Title", name: "title", widget: "string" }
+          - { label: "Story Content", name: "body", widget: "markdown" }
+          - { label: "Baker Image", name: "bakerImage", widget: "image" }
+
+  - name: "settings"
+    label: "Settings"
+    delete: false
+    editor:
+      preview: false
+    files:
+      - file: "src/content/settings/contact.json"
+        label: "Contact & Social"
+        name: "contact"
+        fields:
+          - { label: "Phone Number", name: "phone", widget: "string" }
+          - { label: "Email Address", name: "email", widget: "string" }
+          - { label: "Instagram URL", name: "instagram", widget: "string" }
+          - { label: "Facebook URL", name: "facebook", widget: "string" }
+
   - name: "cakes"
     label: "Cake Gallery"
     folder: "src/content/cakes"
@@ -17,3 +51,4 @@ collections:
       - { label: "Category", name: "category", widget: "select", options: ["Wedding", "Birthday", "Kids", "Holiday", "Trending"] }
       - { label: "Image", name: "image", widget: "image" }
       - { label: "Description", name: "body", widget: "markdown", required: false }
+

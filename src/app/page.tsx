@@ -2,6 +2,7 @@ import HeroSection from "@/components/landing/HeroSection";
 import CategoryGrid from "@/components/landing/CategoryGrid";
 import HowItWorks from "@/components/landing/HowItWorks";
 import CTABanner from "@/components/landing/CTABanner";
+import { getContent } from "@/lib/content";
 
 export const metadata = {
   title: "Chamie Cakes | Custom Cakes in Dallas/Fort Worth",
@@ -9,14 +10,17 @@ export const metadata = {
 };
 
 export default function Home() {
+  const homeData = getContent("pages/home.md");
+  const contactData = getContent("settings/contact.json");
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Bakery",
     "name": "Chamie Cakes",
     "image": "https://chamiecakes.com/images/hero.png",
-    "description": "Custom cakes for life's sweetest moments, handcrafted in Dallas/Fort Worth.",
+    "description": homeData.heroSubtitle || "Custom cakes for life's sweetest moments, handcrafted in Dallas/Fort Worth.",
     "url": "https://chamiecakes.com",
-    "telephone": "7132693696",
+    "telephone": contactData.phone || "7132693696",
     "address": {
       "@type": "PostalAddress",
       "addressLocality": "Dallas",
@@ -33,11 +37,16 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <HeroSection />
-      <CategoryGrid />
+      <HeroSection 
+        title={homeData.heroTitle} 
+        subtitle={homeData.heroSubtitle} 
+      />
+      <CategoryGrid 
+        title={homeData.specialtiesTitle} 
+        description={homeData.specialtiesIntro} 
+      />
       <HowItWorks />
-      {/* Testimonial component will go here in Phase 3 */}
-      <CTABanner />
+      <CTABanner phone={contactData.phone} />
     </main>
   );
 }

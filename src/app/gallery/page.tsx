@@ -1,5 +1,6 @@
 import FilterableGrid from "@/components/gallery/FilterableGrid";
 import CTABanner from "@/components/landing/CTABanner";
+import { getAllCakes, getContent } from "@/lib/content";
 
 export const metadata = {
   title: "Cake Gallery | Chamie Cakes",
@@ -7,6 +8,9 @@ export const metadata = {
 };
 
 export default function GalleryPage() {
+  const cakes = getAllCakes();
+  const contactData = getContent("settings/contact.json");
+
   return (
     <main className="flex flex-col min-h-screen pt-28">
       <div className="container mx-auto px-4 max-w-6xl">
@@ -17,11 +21,11 @@ export default function GalleryPage() {
           </p>
         </div>
         
-        <FilterableGrid />
+        <FilterableGrid initialCakes={cakes} />
       </div>
       
       <div className="mt-20">
-        <CTABanner />
+        <CTABanner phone={contactData.phone} />
       </div>
     </main>
   );

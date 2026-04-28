@@ -5,23 +5,31 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 
-// Mock data leveraging the images we generated
-const galleryItems = [
-  { id: 1, title: "Classic Floral Tier", category: "wedding", image: "/images/wedding.png" },
-  { id: 2, title: "Pastel Birthday Dream", category: "birthday", image: "/images/birthday.png" },
-  { id: 3, title: "Woodland Creatures", category: "kids", image: "/images/kids.png" },
-  { id: 4, title: "Winter Wonderland", category: "holiday", image: "/images/holiday.png" },
-  { id: 5, title: "Golden Anniversary", category: "wedding", image: "/images/wedding.png" }, // Reusing for placeholder
-  { id: 6, title: "First Birthday Smash", category: "kids", image: "/images/kids.png" },
-];
-
 const categories = ["All", "Wedding", "Birthday", "Kids", "Holiday", "Trending"];
 
-export default function FilterableGrid() {
+interface Cake {
+  id: string;
+  title: string;
+  category: string;
+  image: string;
+  description?: string;
+}
+
+export default function FilterableGrid({ initialCakes = [] }: { initialCakes?: Cake[] }) {
   const [filter, setFilter] = useState("All");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
-  const filteredItems = galleryItems.filter(item => 
+  // Fallback items if CMS is empty
+  const defaultItems = [
+    { id: "1", title: "Classic Floral Tier", category: "Wedding", image: "/images/wedding.png" },
+    { id: "2", title: "Pastel Birthday Dream", category: "Birthday", image: "/images/birthday.png" },
+    { id: "3", title: "Woodland Creatures", category: "Kids", image: "/images/kids.png" },
+    { id: "4", title: "Winter Wonderland", category: "Holiday", image: "/images/holiday.png" },
+  ];
+
+  const displayItems = initialCakes.length > 0 ? initialCakes : defaultItems;
+
+  const filteredItems = displayItems.filter(item => 
     filter === "All" ? true : item.category.toLowerCase() === filter.toLowerCase()
   );
 
