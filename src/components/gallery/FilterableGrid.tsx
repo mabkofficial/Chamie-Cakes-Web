@@ -9,9 +9,9 @@ const categories = ["All", "Wedding", "Birthday", "Kids", "Holiday", "Trending"]
 
 interface Cake {
   id: string;
-  title: string;
-  category: string;
-  image: string;
+  title?: string;
+  category?: string;
+  image?: string;
   description?: string;
 }
 
@@ -30,7 +30,7 @@ export default function FilterableGrid({ initialCakes = [] }: { initialCakes?: C
   const displayItems = initialCakes.length > 0 ? initialCakes : defaultItems;
 
   const filteredItems = displayItems.filter(item => 
-    filter === "All" ? true : item.category.toLowerCase() === filter.toLowerCase()
+    filter === "All" ? true : (item.category || "").toLowerCase() === filter.toLowerCase()
   );
 
   return (
@@ -68,21 +68,21 @@ export default function FilterableGrid({ initialCakes = [] }: { initialCakes?: C
             >
               <button 
                 className="w-full relative group cursor-pointer rounded-2xl overflow-hidden shadow-sm border border-border/50 bg-white block text-left"
-                onClick={() => setSelectedImage(item.image)}
-                aria-label={`View full image of ${item.title}`}
+                onClick={() => setSelectedImage(item.image || "/images/placeholder.png")}
+                aria-label={`View full image of ${item.title || "Cake"}`}
               >
                 <div className="relative w-full aspect-[4/5]">
                   <Image
-                    src={item.image}
-                    alt={`${item.title} - ${item.category} cake`}
+                    src={item.image || "/images/placeholder.png"}
+                    alt={`${item.title || "Cake"} - ${item.category || "Other"} cake`}
                     fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                   {/* Hover Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6" aria-hidden="true">
-                    <span className="text-white/90 text-sm font-medium uppercase tracking-wider mb-1">{item.category}</span>
-                    <h3 className="text-white text-xl font-heading font-bold">{item.title}</h3>
+                    <span className="text-white/90 text-sm font-medium uppercase tracking-wider mb-1">{item.category || "Other"}</span>
+                    <h3 className="text-white text-xl font-heading font-bold">{item.title || "Untitled Creation"}</h3>
                   </div>
                 </div>
               </button>

@@ -30,9 +30,11 @@ export function getAllCakes() {
 
       return {
         id: fileName.replace(/\.md$/, ""),
-        ...data,
+        title: (data.title as string) || "Untitled Cake",
+        category: (data.category as string) || "Other",
+        image: (data.image as string) || "/images/placeholder.png",
         description: content,
-      };
+      } as any; // Cast as any to avoid strict type mismatch during build
     });
 
   return allCakesData;
