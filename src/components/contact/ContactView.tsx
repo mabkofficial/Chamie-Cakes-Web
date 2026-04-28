@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Heading } from "@/components/ui/heading";
 import { Section } from "@/components/layout/Section";
 import { SITE_CONFIG } from "@/lib/config";
+import { InstagramIcon, FacebookIcon } from "@/components/ui/SocialIcons";
 import { Phone, Mail, MapPin, Send } from "lucide-react";
 
 const fadeInUp = {
@@ -112,12 +113,13 @@ export default function ContactView() {
             <motion.div className="pt-16 border-t border-slate-100 space-y-8" variants={fadeInUp}>
               <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-slate-500">Digital Gallery</p>
               <div className="flex gap-8">
+
                 <a href={SITE_CONFIG.contact.instagram} className="flex items-center gap-3 text-slate-400 hover:text-black transition-all group">
-                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+                   <InstagramIcon className="w-5 h-5" />
                    <span className="text-[10px] font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all translate-x-2 group-hover:translate-x-0">Instagram</span>
                 </a>
                 <a href={SITE_CONFIG.contact.facebook} className="flex items-center gap-3 text-slate-400 hover:text-black transition-all group">
-                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                   <FacebookIcon className="w-5 h-5" />
                    <span className="text-[10px] font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all translate-x-2 group-hover:translate-x-0">Facebook</span>
                 </a>
               </div>

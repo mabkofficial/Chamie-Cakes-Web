@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { InstagramIcon, FacebookIcon } from "@/components/ui/SocialIcons";
 import { SITE_CONFIG } from "@/lib/config";
 
 export default function Footer() {
@@ -51,13 +51,13 @@ export default function Footer() {
           <div className="space-y-6">
             <h3 className="text-white/30 font-bold tracking-[0.2em] uppercase text-[8px]">Follow</h3>
             <div className="flex gap-6">
-              <a href={SITE_CONFIG.contact.instagram} className="text-white/50 hover:text-white transition-all group flex items-center gap-2">
+              <a href={SITE_CONFIG.contact.instagram} className="text-white/50 hover:text-white transition-all group flex items-center gap-3">
+                <InstagramIcon className="w-4 h-4" />
                 <span className="text-[10px] font-bold uppercase tracking-widest">Instagram</span>
-                <ArrowUpRight className="w-3 h-3 text-white/20 group-hover:text-white" />
               </a>
-              <a href={SITE_CONFIG.contact.facebook} className="text-white/50 hover:text-white transition-all group flex items-center gap-2">
+              <a href={SITE_CONFIG.contact.facebook} className="text-white/50 hover:text-white transition-all group flex items-center gap-3">
+                <FacebookIcon className="w-4 h-4" />
                 <span className="text-[10px] font-bold uppercase tracking-widest">Facebook</span>
-                <ArrowUpRight className="w-3 h-3 text-white/20 group-hover:text-white" />
               </a>
             </div>
           </div>

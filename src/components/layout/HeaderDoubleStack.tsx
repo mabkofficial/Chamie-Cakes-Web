@@ -4,6 +4,7 @@ import Link from "next/link";
 import { SITE_CONFIG } from "@/lib/config";
 import { cn } from "@/lib/utils";
 import { Phone } from "lucide-react";
+import { InstagramIcon, FacebookIcon } from "@/components/ui/SocialIcons";
 
 export default function HeaderDoubleStack({ className }: { className?: string }) {
   return (
@@ -16,8 +17,12 @@ export default function HeaderDoubleStack({ className }: { className?: string })
             <span>Dallas / Fort Worth</span>
           </div>
           <div className="flex gap-4">
-             <a href={SITE_CONFIG.contact.instagram} className="hover:text-black">Instagram</a>
-             <a href={SITE_CONFIG.contact.facebook} className="hover:text-black">Facebook</a>
+             <a href={SITE_CONFIG.contact.instagram} className="hover:text-black transition-colors">
+               <InstagramIcon className="w-3.5 h-3.5" />
+             </a>
+             <a href={SITE_CONFIG.contact.facebook} className="hover:text-black transition-colors">
+               <FacebookIcon className="w-3.5 h-3.5" />
+             </a>
           </div>
         </div>
       </div>

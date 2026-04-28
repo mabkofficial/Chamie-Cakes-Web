@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Menu, X, Phone, Mail } from "lucide-react";
+import { InstagramIcon, FacebookIcon } from "@/components/ui/SocialIcons";
 import { motion, AnimatePresence } from "framer-motion";
 import { SITE_CONFIG } from "@/lib/config";
 import { cn } from "@/lib/utils";
@@ -58,9 +59,13 @@ export default function Header({ className }: { className?: string }) {
               <span className="flex items-center gap-2"><Phone className="w-3 h-3 text-white/40" /> {SITE_CONFIG.contact.phone}</span>
               <span className="hidden sm:inline">Dallas / Fort Worth Metroplex</span>
             </div>
-            <div className="flex gap-6">
-               <a href={SITE_CONFIG.contact.instagram} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Instagram</a>
-               <a href={SITE_CONFIG.contact.facebook} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Facebook</a>
+            <div className="flex gap-4">
+               <a href={SITE_CONFIG.contact.instagram} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                 <InstagramIcon className="w-3.5 h-3.5" />
+               </a>
+               <a href={SITE_CONFIG.contact.facebook} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                 <FacebookIcon className="w-3.5 h-3.5" />
+               </a>
             </div>
           </div>
         </div>
@@ -141,10 +146,16 @@ export default function Header({ className }: { className?: string }) {
             <div className="mt-auto pt-10 border-t border-slate-100 flex flex-col gap-4">
                <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-slate-300">Get in Touch</p>
                <a href={`tel:${SITE_CONFIG.contact.phone}`} className="text-xl font-heading font-bold">{SITE_CONFIG.contact.phone}</a>
-               <div className="flex gap-6 mt-4">
-                  <a href={SITE_CONFIG.contact.instagram} className="text-slate-400 hover:text-black">Instagram</a>
-                  <a href={SITE_CONFIG.contact.facebook} className="text-slate-400 hover:text-black">Facebook</a>
-               </div>
+                <div className="flex gap-6 mt-4">
+                   <a href={SITE_CONFIG.contact.instagram} className="flex items-center gap-2 text-slate-400 hover:text-black transition-colors">
+                     <InstagramIcon className="w-4 h-4" />
+                     <span className="text-[10px] font-bold uppercase tracking-widest">Instagram</span>
+                   </a>
+                   <a href={SITE_CONFIG.contact.facebook} className="flex items-center gap-2 text-slate-400 hover:text-black transition-colors">
+                     <FacebookIcon className="w-4 h-4" />
+                     <span className="text-[10px] font-bold uppercase tracking-widest">Facebook</span>
+                   </a>
+                </div>
             </div>
           </motion.div>
         )}
