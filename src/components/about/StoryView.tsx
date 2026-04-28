@@ -20,7 +20,7 @@ const fadeInUp = {
   initial: { opacity: 0, y: 30 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true },
-  transition: { duration: 0.8, ease: "easeOut" }
+  transition: { duration: 0.8, ease: "easeOut" } as any
 };
 
 const staggerContainer = {
@@ -28,7 +28,7 @@ const staggerContainer = {
   whileInView: {
     transition: {
       staggerChildren: 0.2
-    }
+    } as any
   }
 };
 
