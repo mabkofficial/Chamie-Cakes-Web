@@ -10,7 +10,7 @@ import { SITE_CONFIG } from "@/lib/config";
 
 export default function CTABanner({ phone = SITE_CONFIG.contact.phone }: { phone?: string }) {
   return (
-    <Section aria-labelledby="cta-heading" maxWidth="6xl" className="pb-32">
+    <Section aria-labelledby="cta-heading" maxWidth="7xl" className="pb-32">
       <motion.div 
         className="bg-black text-white rounded-xl p-10 md:p-16 text-center relative overflow-hidden shadow-2xl"
         initial={{ opacity: 0, y: 30 }}
