@@ -1,16 +1,19 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Heading } from "@/components/ui/heading";
+import { Section } from "@/components/layout/Section";
 
 const categories = [
   {
     id: "wedding",
     title: "Wedding",
     description: "Elegant tiers for your special day",
-    bgColor: "bg-primary/20",
     image: "/images/wedding.png",
     link: "/gallery?filter=wedding"
   },
@@ -18,7 +21,6 @@ const categories = [
     id: "birthday",
     title: "Birthday",
     description: "Custom creations for any age",
-    bgColor: "bg-secondary/20",
     image: "/images/birthday.png",
     link: "/gallery?filter=birthday"
   },
@@ -26,7 +28,6 @@ const categories = [
     id: "kids",
     title: "Kids",
     description: "Fun, colorful, and imaginative",
-    bgColor: "bg-accent",
     image: "/images/kids.png",
     link: "/gallery?filter=kids"
   },
@@ -34,9 +35,22 @@ const categories = [
     id: "holiday",
     title: "Holiday & Special",
     description: "Seasonal treats & themed bakes",
-    bgColor: "bg-primary/10",
     image: "/images/holiday.png",
     link: "/gallery?filter=holiday"
+  },
+  {
+    id: "corporate",
+    title: "Corporate",
+    description: "Branded treats for your business",
+    image: "/images/hero.png", // Reusing image for placeholder
+    link: "/gallery?filter=corporate"
+  },
+  {
+    id: "cupcakes",
+    title: "Cupcakes",
+    description: "Personal sized bites of joy",
+    image: "/images/about-preview.png", // Reusing image for placeholder
+    link: "/gallery?filter=cupcakes"
   }
 ];
 
@@ -47,55 +61,125 @@ export default function CategoryGrid({
   title?: string; 
   description?: string; 
 }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const handleNext = () => {
+    setCurrentIndex((prev) => (prev + 1) % categories.length);
+  };
+
+  const handlePrev = () => {
+    setCurrentIndex((prev) => (prev - 1 + categories.length) % categories.length);
+  };
+
+  const scrollTo = (index: number) => {
+    setCurrentIndex(index);
+    if (scrollRef.current) {
+      const cardWidth = 350; // approximate card width
+      scrollRef.current.scrollTo({
+        left: index * cardWidth,
+        behavior: "smooth"
+      });
+    }
+  };
+
   return (
-    <section className="py-24 bg-background">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-heading font-bold text-foreground mb-4">{title}</h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">{description}</p>
+    <Section className="overflow-hidden">
+      <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
+        <div className="space-y-4 max-w-2xl">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+          >
+            <Badge variant="outline">Delicious Specialties</Badge>
+          </motion.div>
+          
+          <Heading size="h2">
+            {title || "Crafted for Every Celebration"}
+          </Heading>
+          
+          <p className="text-slate-500 text-lg font-body leading-relaxed">
+            {description}
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {categories.map((category, index) => (
-            <motion.div
-              key={category.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
+        {/* Navigation Arrows */}
+        <div className="flex gap-4">
+          <button 
+            onClick={handlePrev}
+            className="w-14 h-14 rounded-full border border-slate-200 flex items-center justify-center hover:bg-black hover:text-white transition-all shadow-sm"
+            aria-label="Previous category"
+          >
+            <ChevronLeft className="w-6 h-6" />
+          </button>
+          <button 
+            onClick={handleNext}
+            className="w-14 h-14 rounded-full border border-slate-200 flex items-center justify-center hover:bg-black hover:text-white transition-all shadow-sm"
+            aria-label="Next category"
+          >
+            <ChevronRight className="w-6 h-6" />
+          </button>
+        </div>
+      </div>
+
+      {/* Carousel Container */}
+      <div className="relative group">
+        <motion.div 
+          ref={scrollRef}
+          className="flex gap-4 overflow-x-auto snap-x snap-mandatory no-scrollbar pb-10"
+          initial={{ opacity: 0, x: 100 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+        >
+          {categories.map((cat, index) => (
+            <div 
+              key={cat.id}
+              className="flex-shrink-0 w-[240px] md:w-[280px] snap-start"
             >
-              <Link href={category.link} className="block group h-full">
-                <div className={`h-full rounded-2xl overflow-hidden flex flex-col justify-between ${category.bgColor} border border-border/50 shadow-sm transition-all duration-300 group-hover:-translate-y-2 group-hover:shadow-[0_12px_24px_rgba(0,0,0,0.08)]`}>
-                  
-                  {/* Image section */}
-                  <div className="relative h-48 w-full overflow-hidden">
+              <div className="bg-white rounded-xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col group/card h-full">
+                <Link href={cat.link} className="flex flex-col h-full">
+                  <div className="relative aspect-square overflow-hidden">
                     <Image
-                      src={category.image}
-                      alt={category.title}
+                      src={cat.image}
+                      alt={cat.title}
                       fill
-                      className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
+                      className="object-cover transition-transform duration-700 group-hover/card:scale-105"
                     />
                   </div>
-
-                  {/* Text section */}
-                  <div className="p-6 flex-grow flex flex-col justify-between">
-                    <div>
-                      <h3 className="text-2xl font-heading font-bold mb-2 text-foreground">{category.title}</h3>
-                      <p className="text-foreground/80">{category.description}</p>
-                    </div>
-                    <div className="mt-6 flex justify-end">
-                      <div className="w-10 h-10 rounded-full bg-background flex items-center justify-center shadow-sm group-hover:bg-[#D4AF37] group-hover:text-white transition-colors duration-300">
-                        <ArrowRight className="w-5 h-5" />
-                      </div>
+                  <div className="p-6 space-y-3 bg-white flex-grow flex flex-col">
+                    <div className="space-y-1">
+                      <Heading as="h3" size="h4" className="text-base tracking-tight">{cat.title}</Heading>
+                      <p className="text-slate-400 text-[12px] leading-relaxed font-body line-clamp-2">
+                        {cat.description}
+                      </p>
                     </div>
                   </div>
+                </Link>
+              </div>
+            </div>
+          ))}
+        </motion.div>
 
-                </div>
-              </Link>
-            </motion.div>
+        {/* Pagination Dots */}
+        <div className="flex justify-center gap-3 mt-8">
+          {categories.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => scrollTo(index)}
+              className={cn(
+                "h-1.5 transition-all duration-500 rounded-full",
+                currentIndex === index ? "w-8 bg-black" : "w-1.5 bg-slate-200"
+              )}
+              aria-label={`Go to slide ${index + 1}`}
+            />
           ))}
         </div>
       </div>
-    </section>
+    </Section>
   );
 }
+
+// Utility function to hide scrollbar
+const cn = (...classes: any[]) => classes.filter(Boolean).join(' ');

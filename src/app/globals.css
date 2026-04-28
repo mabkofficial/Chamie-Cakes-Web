@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
@@ -8,9 +7,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: 'Montserrat', sans-serif;
-  --font-mono: var(--font-geist-mono);
-  --font-heading: 'Cormorant Garamond', serif;
+  --font-body: var(--font-inter);
+  --font-heading: var(--font-outfit);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -50,67 +48,67 @@
 }
 
 :root {
-  --background: #FFF5F5;
-  --foreground: #2D3436;
+  --background: #FFFFFF;
+  --foreground: #000000;
   --card: #ffffff;
-  --card-foreground: #2D3436;
+  --card-foreground: #000000;
   --popover: #ffffff;
-  --popover-foreground: #2D3436;
-  --primary: #E8B4B8;
+  --popover-foreground: #000000;
+  --primary: #000000;
   --primary-foreground: #ffffff;
-  --secondary: #A8D5BA;
+  --secondary: #64748b;
   --secondary-foreground: #ffffff;
-  --muted: #f4e8e8;
-  --muted-foreground: #737373;
-  --accent: #f4e8e8;
-  --accent-foreground: #2D3436;
-  --destructive: #ef4444;
-  --border: #e5e5e5;
-  --input: #e5e5e5;
-  --ring: #D4AF37;
-  --chart-1: #E8B4B8;
-  --chart-2: #A8D5BA;
-  --chart-3: #D4AF37;
-  --chart-4: #f4e8e8;
-  --chart-5: #2D3436;
-  --radius: 0.625rem;
-  --sidebar: #FFF5F5;
-  --sidebar-foreground: #2D3436;
-  --sidebar-primary: #E8B4B8;
+  --muted: #f8fafc;
+  --muted-foreground: #94a3b8;
+  --accent: #f8fafc;
+  --accent-foreground: #000000;
+  --destructive: #000000;
+  --border: #f1f5f9;
+  --input: #f1f5f9;
+  --ring: #000000;
+  --chart-1: #000000;
+  --chart-2: #334155;
+  --chart-3: #475569;
+  --chart-4: #94a3b8;
+  --chart-5: #cbd5e1;
+  --radius: 1.25rem;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #000000;
+  --sidebar-primary: #000000;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f4e8e8;
-  --sidebar-accent-foreground: #2D3436;
-  --sidebar-border: #e5e5e5;
-  --sidebar-ring: #D4AF37;
+  --sidebar-accent: #f8fafc;
+  --sidebar-accent-foreground: #000000;
+  --sidebar-border: #f1f5f9;
+  --sidebar-ring: #000000;
 }
 
 .dark {
-  --background: #FFF5F5; /* Disable dark mode per anti-patterns */
-  --foreground: #2D3436;
-  --card: #ffffff;
-  --card-foreground: #2D3436;
-  --popover: #ffffff;
-  --popover-foreground: #2D3436;
-  --primary: #E8B4B8;
-  --primary-foreground: #ffffff;
-  --secondary: #A8D5BA;
+  --background: #000000;
+  --foreground: #ffffff;
+  --card: #0a0a0a;
+  --card-foreground: #ffffff;
+  --popover: #0a0a0a;
+  --popover-foreground: #ffffff;
+  --primary: #ffffff;
+  --primary-foreground: #000000;
+  --secondary: #1e293b;
   --secondary-foreground: #ffffff;
-  --muted: #f4e8e8;
-  --muted-foreground: #737373;
-  --accent: #f4e8e8;
-  --accent-foreground: #2D3436;
-  --destructive: #ef4444;
-  --border: #e5e5e5;
-  --input: #e5e5e5;
-  --ring: #D4AF37;
-  --sidebar: #FFF5F5;
-  --sidebar-foreground: #2D3436;
-  --sidebar-primary: #E8B4B8;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f4e8e8;
-  --sidebar-accent-foreground: #2D3436;
-  --sidebar-border: #e5e5e5;
-  --sidebar-ring: #D4AF37;
+  --muted: #0f172a;
+  --muted-foreground: #64748b;
+  --accent: #1e293b;
+  --accent-foreground: #ffffff;
+  --destructive: #ffffff;
+  --border: #1e293b;
+  --input: #1e293b;
+  --ring: #ffffff;
+  --sidebar: #000000;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #ffffff;
+  --sidebar-primary-foreground: #000000;
+  --sidebar-accent: #1e293b;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #1e293b;
+  --sidebar-ring: #ffffff;
 }
 
 @layer base {
@@ -118,7 +116,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground font-body;
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-heading tracking-tight;

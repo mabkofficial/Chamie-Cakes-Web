@@ -1,0 +1,64 @@
+/* Minimalist Luxury Admin Styling */
+
+/* Target the main CMS UI */
+body {
+  background-color: #f8fafa !important;
+  color: #111827 !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+}
+
+/* Sidebar & Header */
+aside, header {
+  background-color: #ffffff !important;
+  border-right: 1px solid #f1f5f9 !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+}
+
+/* Primary Buttons in CMS */
+button[class*="Button-button"], 
+button[class*="StyledButton"] {
+  background-color: #111827 !important;
+  color: #ffffff !important;
+  border-radius: 9999px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+  font-size: 11px !important;
+  padding: 10px 24px !important;
+  transition: all 0.3s ease !important;
+}
+
+button[class*="Button-button"]:hover {
+  background-color: #1f2937 !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Cards & Containers */
+div[class*="Card"], 
+div[class*="GridCard"] {
+  border-radius: 32px !important;
+  border: 1px solid #f1f5f9 !important;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.02) !important;
+  overflow: hidden !important;
+}
+
+/* Form Inputs */
+input, select, textarea {
+  border-radius: 12px !important;
+  border: 1px solid #f1f5f9 !important;
+  padding: 12px !important;
+  font-size: 14px !important;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: #111827 !important;
+  outline: none !important;
+}
+
+/* Preview Pane Styling */
+.nc-previewPane-frame {
+  background: #ffffff !important;
+  border-radius: 32px !important;
+  margin: 20px !important;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.05) !important;
+}

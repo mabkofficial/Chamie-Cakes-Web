@@ -1,20 +1,20 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Montserrat } from "next/font/google";
+import { Outfit, Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import FloatingCTA from "@/components/layout/FloatingCTA";
 
-const cormorant = Cormorant_Garamond({ 
+const outfit = Outfit({ 
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: '--font-cormorant',
+  weight: ["400", "500", "600", "700"],
+  variable: '--font-outfit',
 });
 
-const montserrat = Montserrat({
+const inter = Inter({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: '--font-montserrat',
+  weight: ["300", "400", "500", "600"],
+  variable: '--font-inter',
 });
 
 export const metadata: Metadata = {
@@ -40,6 +40,8 @@ export const metadata: Metadata = {
   }
 };
 
+import Script from "next/script";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -47,11 +49,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full antialiased scroll-smooth">
-      <head>
-        <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-      </head>
       <body 
-        className={`${cormorant.variable} ${montserrat.variable} min-h-full flex flex-col font-sans`}
+        className={`${outfit.variable} ${inter.variable} min-h-full flex flex-col font-body`}
         suppressHydrationWarning
       >
         <Header />
@@ -60,6 +59,7 @@ export default function RootLayout({
         </main>
         <Footer />
         <FloatingCTA />
+        <Script src="https://identity.netlify.com/v1/netlify-identity-widget.js" strategy="lazyOnload" />
       </body>
     </html>
   );

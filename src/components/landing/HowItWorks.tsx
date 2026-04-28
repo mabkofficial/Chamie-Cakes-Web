@@ -1,6 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { Badge } from "@/components/ui/badge";
+import { Heading } from "@/components/ui/heading";
+import { Section } from "@/components/layout/Section";
 
 const steps = [
   {
@@ -22,37 +25,57 @@ const steps = [
 
 export default function HowItWorks() {
   return (
-    <section className="py-24 bg-white" aria-labelledby="how-it-works-heading">
-      <div className="container mx-auto px-4 max-w-5xl">
-        <div className="text-center mb-20">
-          <h2 id="how-it-works-heading" className="text-4xl font-heading font-bold text-foreground mb-4">How It Works</h2>
-          <p className="text-muted-foreground text-lg">Your dream cake in three simple steps</p>
+    <Section className="py-40 bg-white" aria-labelledby="how-it-works-heading">
+      <div className="flex flex-col lg:flex-row justify-between items-start mb-24 gap-12">
+        <div className="space-y-4 max-w-xl">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+          >
+            <Badge variant="outline" className="border-black/10 text-black/40">The Experience</Badge>
+          </motion.div>
+          <Heading id="how-it-works-heading" size="h2">
+            Your dream cake, <br className="hidden md:block" /> in three simple steps.
+          </Heading>
         </div>
-
-        <div className="relative">
-          {/* Connecting Line */}
-          <div className="hidden md:block absolute top-1/2 left-0 right-0 h-0.5 bg-primary/20 -translate-y-1/2 z-0" aria-hidden="true" />
-
-          <ol className="grid grid-cols-1 md:grid-cols-3 gap-12 relative z-10 list-none p-0 m-0">
-            {steps.map((step, index) => (
-              <motion.li
-                key={step.number}
-                className="flex flex-col items-center text-center bg-white"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.6, delay: index * 0.2 }}
-              >
-                <div className="w-16 h-16 rounded-full bg-primary text-white flex items-center justify-center text-2xl font-bold font-heading mb-6 shadow-md shadow-primary/20" aria-hidden="true">
-                  {step.number}
-                </div>
-                <h3 className="text-xl font-bold mb-3">{step.title}</h3>
-                <p className="text-muted-foreground">{step.description}</p>
-              </motion.li>
-            ))}
-          </ol>
-        </div>
+        <p className="text-slate-400 text-lg font-body max-w-sm leading-relaxed pt-4">
+          A seamless boutique process designed to take the stress out of your celebration planning.
+        </p>
       </div>
-    </section>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-16 relative">
+        {/* Connection Line (Desktop) */}
+        <div className="hidden md:block absolute top-12 left-0 right-0 h-[1px] bg-slate-100 z-0" />
+
+        {steps.map((step, index) => (
+          <motion.div
+            key={step.number}
+            className="relative z-10 flex flex-col group"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: index * 0.2, duration: 0.8 }}
+          >
+            {/* Number Circle */}
+            <div className="w-24 h-24 rounded-full bg-white border border-slate-100 flex items-center justify-center text-3xl font-heading font-light text-black mb-10 shadow-sm group-hover:bg-black group-hover:text-white group-hover:border-black transition-all duration-700">
+              {step.number}
+            </div>
+
+            <div className="space-y-4 pr-8">
+              <h3 className="text-xl font-heading font-bold tracking-tight text-black group-hover:translate-x-1 transition-transform duration-500">
+                {step.title}
+              </h3>
+              <p className="text-slate-500 text-sm leading-relaxed font-body">
+                {step.description}
+              </p>
+            </div>
+
+            {/* Vertical accent line for mobile */}
+            <div className="md:hidden absolute left-12 top-24 bottom-[-64px] w-[1px] bg-slate-100 last:hidden" />
+          </motion.div>
+        ))}
+      </div>
+    </Section>
   );
 }

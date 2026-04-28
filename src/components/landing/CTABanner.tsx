@@ -1,49 +1,71 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { PhoneCall } from "lucide-react";
+import { ArrowRight, Star } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Heading } from "@/components/ui/heading";
+import { Section } from "@/components/layout/Section";
+import { SITE_CONFIG } from "@/lib/config";
 
-export default function CTABanner({ phone = "713.269.3696" }: { phone?: string }) {
+export default function CTABanner({ phone = SITE_CONFIG.contact.phone }: { phone?: string }) {
   return (
-    <section className="py-24 bg-primary/10 border-t border-primary/20" aria-labelledby="cta-heading">
-      <div className="container mx-auto px-4">
-        <motion.div 
-          className="max-w-3xl mx-auto text-center"
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 0.5 }}
-        >
-          <h2 id="cta-heading" className="text-4xl md:text-5xl font-heading font-bold text-foreground mb-6 leading-tight">Ready to Create Your Custom Cake?</h2>
-          
+    <Section aria-labelledby="cta-heading" maxWidth="6xl" className="pb-32">
+      <motion.div 
+        className="bg-black text-white rounded-xl p-10 md:p-16 text-center relative overflow-hidden shadow-2xl"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+      >
+        {/* Background Decorative Element */}
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
 
-          <motion.div
-            animate={{ scale: [1, 1.02, 1] }}
-            transition={{ repeat: Infinity, duration: 4, repeatDelay: 1, ease: "easeInOut" }}
-            className="inline-block mt-4 mb-8"
-          >
-            <Link 
-              href="/order" 
-              className={cn(
-                buttonVariants({ size: "lg" }),
-                "bg-[#D4AF37] hover:bg-[#b8952b] text-white rounded-full px-12 py-8 text-xl font-medium shadow-xl hover:shadow-[0_0_25px_rgba(212,175,55,0.5)] transition-all"
-              )}
+        <div className="relative z-10 space-y-8">
+          <div className="space-y-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className="flex justify-center"
             >
-              Start Your Order &rarr;
-            </Link>
-          </motion.div>
-          
-          <div className="flex items-center justify-center gap-3 text-muted-foreground text-lg">
-            <PhoneCall className="w-5 h-5 text-primary" />
-            <p>
-              Or call Chamie directly at <a href={`tel:${phone.replace(/\./g, '')}`} className="text-foreground font-semibold hover:text-primary transition-colors hover:underline decoration-primary underline-offset-4">{phone}</a>
+              <Badge variant="outline" className="border-white/10 text-white/30 font-medium px-4 py-0.5 rounded-full text-[8px] uppercase tracking-[0.2em]">
+                Ready to start?
+              </Badge>
+            </motion.div>
+            
+            <Heading id="cta-heading" size="h2" align="center" className="text-white tracking-tight">
+              Let's bake something special together.
+            </Heading>
+            
+            <p className="text-white/40 text-sm md:text-base max-w-lg mx-auto font-body leading-relaxed">
+              Whether it's a wedding, a birthday, or just because—we're here to make your celebration unforgettable.
             </p>
           </div>
-        </motion.div>
-      </div>
-    </section>
+          
+          <div className="pt-4">
+            <Link 
+              href="/order" 
+              className="inline-flex items-center gap-6 bg-white text-black px-14 py-6 rounded-full font-bold text-xs uppercase tracking-[0.2em] hover:scale-105 transition-all shadow-2xl active:scale-95 group"
+            >
+              Inquire Now
+              <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-2" />
+            </Link>
+          </div>
+          
+          <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12">
+            <div className="flex items-center gap-3">
+              <div className="flex gap-1">
+                 {[...Array(5)].map((_, i) => <Star key={i} className="w-2 h-2 text-white fill-white" />)}
+              </div>
+              <span className="text-[8px] font-bold uppercase tracking-[0.3em] text-white/30">5-Star Rated in DFW</span>
+            </div>
+            <a href={`tel:${phone.replace(/\./g, '')}`} className="text-[8px] font-bold uppercase tracking-[0.3em] text-white/30 hover:text-white transition-colors">
+              {phone}
+            </a>
+          </div>
+        </div>
+      </motion.div>
+    </Section>
   );
 }

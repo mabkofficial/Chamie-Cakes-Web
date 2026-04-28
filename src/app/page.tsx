@@ -1,26 +1,31 @@
 import HeroSection from "@/components/landing/HeroSection";
 import CategoryGrid from "@/components/landing/CategoryGrid";
 import HowItWorks from "@/components/landing/HowItWorks";
+import AboutPreview from "@/components/landing/AboutPreview";
+import PortfolioPreview from "@/components/landing/PortfolioPreview";
+import Testimonials from "@/components/landing/Testimonials";
+import FAQ from "@/components/landing/FAQ";
 import CTABanner from "@/components/landing/CTABanner";
 import { getContent } from "@/lib/content";
+import { SITE_CONFIG } from "@/lib/config";
+import Script from "next/script";
 
 export const metadata = {
-  title: "Chamie Cakes | Custom Cakes in Dallas/Fort Worth",
+  title: `${SITE_CONFIG.name} | Custom Cakes in Dallas/Fort Worth`,
   description: "Handcrafted, artisanal custom cakes for weddings, birthdays, and special events in the Dallas/Fort Worth area.",
 };
 
 export default function Home() {
   const homeData = getContent("pages/home.md");
-  const contactData = getContent("settings/contact.json");
 
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Bakery",
-    "name": "Chamie Cakes",
-    "image": "https://chamiecakes.com/images/hero.png",
+    "name": SITE_CONFIG.name,
+    "image": `https://${SITE_CONFIG.domain}/images/hero.png`,
     "description": homeData.heroSubtitle || "Custom cakes for life's sweetest moments, handcrafted in Dallas/Fort Worth.",
-    "url": "https://chamiecakes.com",
-    "telephone": contactData.phone || "7132693696",
+    "url": `https://${SITE_CONFIG.domain}`,
+    "telephone": SITE_CONFIG.contact.phone,
     "address": {
       "@type": "PostalAddress",
       "addressLocality": "Dallas",
@@ -33,7 +38,8 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col">
-      <script
+      <Script
+        id="json-ld"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
@@ -41,12 +47,16 @@ export default function Home() {
         title={homeData.heroTitle} 
         subtitle={homeData.heroSubtitle} 
       />
+      <AboutPreview />
       <CategoryGrid 
         title={homeData.specialtiesTitle} 
         description={homeData.specialtiesIntro} 
       />
       <HowItWorks />
-      <CTABanner phone={contactData.phone} />
+      <PortfolioPreview />
+      <Testimonials />
+      <FAQ />
+      <CTABanner phone={SITE_CONFIG.contact.phone} />
     </main>
   );
 }

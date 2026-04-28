@@ -2,327 +2,417 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, ChevronRight, ChevronLeft, Save, UploadCloud } from "lucide-react";
+import { Check, ChevronRight, ChevronLeft, UploadCloud, Loader2, Calendar, Users, Palette, MessageSquare, Heart, Gift, Baby, Briefcase, Clock, MapPin, DollarSign } from "lucide-react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 const STEPS = [
-  { id: 1, name: "Event Basics" },
-  { id: 2, name: "Cake Preferences" },
-  { id: 3, name: "Design Vision" },
-  { id: 4, name: "Contact & Review" }
+  { id: 1, name: "The Event", icon: Calendar },
+  { id: 2, name: "The Cake", icon: Users },
+  { id: 3, name: "The Vision", icon: Palette },
+  { id: 4, name: "Contact", icon: MessageSquare }
+];
+
+const OCCASIONS = [
+  { id: "wedding", name: "Wedding", icon: Heart },
+  { id: "birthday", name: "Birthday", icon: Gift },
+  { id: "kids", name: "Kids Party", icon: Baby },
+  { id: "corporate", name: "Corporate", icon: Briefcase }
+];
+
+const TIER_OPTIONS = [
+  { id: "1-tier", name: "1 Tier", desc: "Intimate & Modern" },
+  { id: "2-tier", name: "2 Tiers", desc: "Statement Piece" },
+  { id: "3-tier", name: "3+ Tiers", desc: "Grand Installation" }
+];
+
+const BUDGET_RANGES = [
+  { id: "under-500", name: "$200 - $500" },
+  { id: "500-1000", name: "$500 - $1,000" },
+  { id: "over-1000", name: "$1,000+" }
 ];
 
 export default function MultiStepForm() {
   const [currentStep, setCurrentStep] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  
   const [formData, setFormData] = useState({
     eventType: "",
     date: "",
+    time: "12:00",
     servings: 20,
-    flavor: "",
-    icing: "",
+    tiers: "1-tier",
+    flavor: "Signature Velvet",
+    filling: "",
     dietary: [] as string[],
     description: "",
     colors: "",
+    budget: "$500 - $1,000",
     name: "",
     email: "",
     phone: "",
-    deliveryMethod: "pickup"
+    contactMethod: "email",
+    deliveryMethod: "pickup",
+    address: ""
   });
-
-  // Load from local storage on mount
-  useEffect(() => {
-    const saved = localStorage.getItem("chamie_order_draft");
-    if (saved) {
-      try {
-        setFormData(JSON.parse(saved));
-      } catch (e) {
-        console.error("Failed to parse saved form data", e);
-      }
-    }
-  }, []);
-
-  const saveForLater = () => {
-    localStorage.setItem("chamie_order_draft", JSON.stringify(formData));
-    alert("Your order draft has been saved!");
-  };
 
   const updateForm = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+    if (errors[field]) {
+      const newErrors = { ...errors };
+      delete newErrors[field];
+      setErrors(newErrors);
+    }
   };
 
   const toggleDietary = (need: string) => {
-    setFormData(prev => ({
-      ...prev,
-      dietary: prev.dietary.includes(need)
-        ? prev.dietary.filter(i => i !== need)
-        : [...prev.dietary, need]
-    }));
+    const current = [...formData.dietary];
+    const index = current.indexOf(need);
+    if (index > -1) {
+      current.splice(index, 1);
+    } else {
+      current.push(need);
+    }
+    updateForm("dietary", current);
   };
 
-  const nextStep = () => setCurrentStep(prev => Math.min(prev + 1, STEPS.length));
+  const validateStep = (step: number) => {
+    const newErrors: Record<string, string> = {};
+    if (step === 1) {
+      if (!formData.eventType) newErrors.eventType = "Required";
+      if (!formData.date) newErrors.date = "Required";
+      if (formData.deliveryMethod === "delivery" && !formData.address) newErrors.address = "Required";
+    }
+    if (step === 4) {
+      if (!formData.name) newErrors.name = "Required";
+      if (!formData.email) newErrors.email = "Required";
+      if (!formData.phone) newErrors.phone = "Required";
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const nextStep = () => {
+    if (validateStep(currentStep)) {
+      setCurrentStep(prev => Math.min(prev + 1, STEPS.length));
+    }
+  };
+  
   const prevStep = () => setCurrentStep(prev => Math.max(prev - 1, 1));
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    localStorage.removeItem("chamie_order_draft");
-    // Redirect to Stripe or external payment flow
-    window.location.href = "https://buy.stripe.com/test_payment_link";
-  };
-
   return (
-    <div className="w-full max-w-4xl mx-auto bg-white rounded-2xl shadow-xl border border-border overflow-hidden">
-      {/* Progress Bar Header */}
-      <div className="bg-primary/5 px-8 py-6 border-b border-border">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-2xl font-heading font-bold text-foreground">Custom Order Request</h2>
-          <button 
-            onClick={saveForLater}
-            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
-          >
-            <Save className="w-4 h-4" />
-            <span className="hidden sm:inline">Save Draft</span>
-          </button>
+    <div className="w-full bg-white rounded-xl shadow-2xl border border-slate-100 overflow-hidden">
+      {/* Progress Nav - Compact */}
+      <div className="px-8 py-5 border-b border-slate-100 flex items-center justify-between">
+        <div className="flex gap-4">
+           {STEPS.map((step) => {
+             return (
+               <div key={step.id} className="flex items-center gap-3">
+                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold transition-all ${
+                   currentStep === step.id ? "bg-black text-white" : currentStep > step.id ? "bg-black text-white" : "bg-white border border-slate-100 text-slate-300"
+                 }`}>
+                   {currentStep > step.id ? <Check className="w-4 h-4" /> : step.id}
+                 </div>
+                 <span className={`hidden lg:block text-[9px] font-bold uppercase tracking-widest ${
+                   currentStep >= step.id ? "text-black" : "text-slate-300"
+                 }`}>{step.name}</span>
+                 {step.id < 4 && <div className="w-4 h-px bg-slate-100 mx-1 hidden lg:block" />}
+               </div>
+             );
+           })}
         </div>
-
-        <div className="relative flex justify-between">
-          <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-border z-0"></div>
-          <div 
-            className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-primary transition-all duration-500 z-0"
-            style={{ width: `${((currentStep - 1) / (STEPS.length - 1)) * 100}%` }}
-          ></div>
-
-          {STEPS.map((step) => (
-            <div key={step.id} className="relative z-10 flex flex-col items-center">
-              <div 
-                className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-colors duration-300 ${
-                  currentStep > step.id 
-                    ? "bg-primary text-white" 
-                    : currentStep === step.id 
-                      ? "bg-[#D4AF37] text-white ring-4 ring-[#D4AF37]/20" 
-                      : "bg-white border-2 border-border text-muted-foreground"
-                }`}
-              >
-                {currentStep > step.id ? <Check className="w-4 h-4" /> : step.id}
-              </div>
-              <span className={`absolute top-10 text-xs font-medium whitespace-nowrap transition-colors duration-300 ${
-                currentStep >= step.id ? "text-foreground" : "text-muted-foreground"
-              }`}>
-                {step.name}
-              </span>
-            </div>
-          ))}
+        <div className="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400 hidden sm:block">
+          Inquiry Phase
         </div>
       </div>
 
-      {/* Form Content */}
-      <div className="p-8 pt-12 min-h-[400px]">
+      <div className="p-8 md:p-10 lg:p-12">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentStep}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
+            className="space-y-8 max-w-2xl mx-auto"
           >
-            {/* Step 1: Event Basics */}
+            {/* Step 1: Foundation */}
             {currentStep === 1 && (
-              <div className="space-y-6">
-                <h3 className="text-xl font-heading font-bold mb-4">Tell us about your event</h3>
-                
+              <div className="space-y-8">
+                <div className="space-y-2">
+                  <p className="text-[9px] font-bold uppercase tracking-[0.4em] text-slate-400">Step 01 / Foundation</p>
+                  <h2 className="text-2xl md:text-3xl font-heading font-bold tracking-tighter text-black">The Event Details.</h2>
+                </div>
+
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  {OCCASIONS.map(occasion => {
+                    const Icon = occasion.icon;
+                    return (
+                      <button
+                        key={occasion.id}
+                        onClick={() => updateForm("eventType", occasion.id)}
+                        className={`flex flex-col items-center justify-center gap-3 p-6 rounded-lg border-2 transition-all group ${
+                          formData.eventType === occasion.id 
+                            ? "border-black bg-black text-white shadow-xl" 
+                            : "border-slate-50 bg-slate-50 text-slate-400 hover:border-slate-200"
+                        }`}
+                      >
+                        <div className={`p-2 rounded-lg transition-colors ${
+                          formData.eventType === occasion.id ? "bg-white/10" : "bg-white group-hover:bg-slate-100"
+                        }`}>
+                          <Icon className="w-5 h-5" />
+                        </div>
+                        <span className="text-[9px] font-bold uppercase tracking-[0.2em]">{occasion.name}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium" htmlFor="eventType">Event Type <span className="text-destructive">*</span></label>
-                    <select 
-                      id="eventType"
-                      required
-                      className="w-full p-3 border border-border rounded-lg bg-white focus:ring-2 focus:ring-primary focus:border-primary outline-none"
-                      value={formData.eventType}
-                      onChange={(e) => updateForm("eventType", e.target.value)}
-                    >
-                      <option value="">Select Event Type</option>
-                      <option value="wedding">Wedding</option>
-                      <option value="birthday">Birthday</option>
-                      <option value="anniversary">Anniversary</option>
-                      <option value="corporate">Corporate Event</option>
-                      <option value="other">Other</option>
-                    </select>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium" htmlFor="eventDate">Event Date <span className="text-destructive">*</span></label>
+                    <label className="text-[9px] font-bold uppercase tracking-widest text-slate-500 ml-1 flex items-center gap-2">
+                       <Calendar className="w-3 h-3" /> Event Date
+                    </label>
                     <input 
-                      id="eventDate"
                       type="date"
-                      required
-                      className="w-full p-3 border border-border rounded-lg bg-white focus:ring-2 focus:ring-primary focus:border-primary outline-none"
+                      className="w-full p-3.5 bg-slate-50 rounded-lg border border-slate-100 focus:bg-white focus:border-black outline-none font-body text-xs text-black transition-all"
                       value={formData.date}
                       onChange={(e) => updateForm("date", e.target.value)}
                     />
                   </div>
+                  <div className="space-y-2">
+                    <label className="text-[9px] font-bold uppercase tracking-widest text-slate-500 ml-1 flex items-center gap-2">
+                       <Clock className="w-3 h-3" /> Setup Time
+                    </label>
+                    <input 
+                      type="time"
+                      className="w-full p-3.5 bg-slate-50 rounded-lg border border-slate-100 focus:bg-white focus:border-black outline-none font-body text-xs text-black transition-all"
+                      value={formData.time}
+                      onChange={(e) => updateForm("time", e.target.value)}
+                    />
+                  </div>
                 </div>
 
-                <div className="space-y-4 pt-4">
-                  <div className="flex justify-between items-end">
-                    <label className="text-sm font-medium">Estimated Servings</label>
-                    <span className="text-2xl font-bold text-primary">{formData.servings}</span>
+                <div className="space-y-3">
+                  <label className="text-[9px] font-bold uppercase tracking-widest text-slate-500 ml-1 flex items-center gap-2">
+                     <MapPin className="w-3 h-3" /> Fulfillment
+                  </label>
+                  <div className="flex gap-2">
+                    {["pickup", "delivery"].map(method => (
+                      <button
+                        key={method}
+                        onClick={() => updateForm("deliveryMethod", method)}
+                        className={`flex-1 py-3.5 rounded-lg border text-[9px] font-bold uppercase tracking-widest transition-all ${
+                          formData.deliveryMethod === method ? "bg-black text-white border-black shadow-lg" : "bg-slate-50 border-slate-100 text-slate-400"
+                        }`}
+                      >
+                        {method}
+                      </button>
+                    ))}
+                  </div>
+                  {formData.deliveryMethod === "delivery" && (
+                    <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }}>
+                      <input 
+                        type="text"
+                        placeholder="Venue Name or Full Delivery Address"
+                        className="w-full p-3.5 mt-2 bg-slate-50 rounded-lg border border-slate-100 focus:bg-white focus:border-black outline-none font-body text-xs transition-all"
+                        value={formData.address}
+                        onChange={(e) => updateForm("address", e.target.value)}
+                      />
+                    </motion.div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Step 2: Architecture */}
+            {currentStep === 2 && (
+              <div className="space-y-8">
+                <div className="space-y-2">
+                  <p className="text-[9px] font-bold uppercase tracking-[0.4em] text-slate-400">Step 02 / Architecture</p>
+                  <h2 className="text-2xl md:text-3xl font-heading font-bold tracking-tighter text-black">Scale & Profile.</h2>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  {TIER_OPTIONS.map(tier => (
+                    <button
+                      key={tier.id}
+                      onClick={() => updateForm("tiers", tier.id)}
+                      className={`p-5 rounded-lg border-2 transition-all text-left space-y-2 ${
+                        formData.tiers === tier.id 
+                          ? "border-black bg-slate-50 shadow-md" 
+                          : "border-slate-50 bg-slate-50/50 hover:border-slate-200"
+                      }`}
+                    >
+                      <p className="text-[10px] font-bold uppercase text-black tracking-[0.1em]">{tier.name}</p>
+                      <p className="text-[9px] text-slate-500 font-body leading-relaxed">{tier.desc}</p>
+                    </button>
+                  ))}
+                </div>
+
+                <div className="space-y-5">
+                  <div className="flex justify-between items-center">
+                    <label className="text-[9px] font-bold uppercase tracking-widest text-slate-500">Guest Servings</label>
+                    <span className="text-black font-bold text-xs">{formData.servings} guests</span>
                   </div>
                   <input 
-                    type="range" 
-                    min="10" max="200" step="5"
-                    className="w-full accent-primary h-2 bg-muted rounded-lg appearance-none cursor-pointer"
+                    type="range" min="10" max="250" step="10"
+                    className="w-full accent-black h-1 bg-slate-100 rounded-lg appearance-none cursor-pointer"
                     value={formData.servings}
                     onChange={(e) => updateForm("servings", parseInt(e.target.value))}
                   />
-                  <div className="flex justify-between text-xs text-muted-foreground">
-                    <span>10 (Small gathering)</span>
-                    <span>200+ (Large wedding)</span>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Step 2: Cake Preferences */}
-            {currentStep === 2 && (
-              <div className="space-y-8">
-                <h3 className="text-xl font-heading font-bold mb-4">Flavor & Fillings</h3>
-                
-                <div className="space-y-3">
-                  <label className="text-sm font-medium">Cake Flavor</label>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    {["Vanilla Bean", "Rich Chocolate", "Red Velvet", "Lemon Raspberry"].map(flavor => (
-                      <div 
-                        key={flavor}
-                        onClick={() => updateForm("flavor", flavor)}
-                        className={`p-4 border rounded-xl cursor-pointer text-center transition-all ${
-                          formData.flavor === flavor 
-                            ? "border-primary bg-primary/10 ring-2 ring-primary/20" 
-                            : "border-border hover:border-primary/50 bg-white"
-                        }`}
-                      >
-                        <span className="font-medium text-sm">{flavor}</span>
-                      </div>
-                    ))}
-                  </div>
                 </div>
 
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                   <div className="space-y-2">
+                     <label className="text-[9px] font-bold uppercase tracking-widest text-slate-500 ml-1">Signature Flavor</label>
+                     <div className="relative">
+                        <select 
+                          className="w-full p-3.5 bg-slate-50 rounded-lg border border-slate-100 focus:bg-white focus:border-black outline-none font-body text-xs appearance-none cursor-pointer transition-all"
+                          value={formData.flavor}
+                          onChange={(e) => updateForm("flavor", e.target.value)}
+                        >
+                          <option>Signature Velvet</option>
+                          <option>Lemon Lavender</option>
+                          <option>Salted Caramel</option>
+                          <option>Seasonal Selection</option>
+                        </select>
+                        <ChevronRight className="absolute right-4 top-1/2 -translate-y-1/2 w-3 h-3 rotate-90 text-slate-300 pointer-events-none" />
+                     </div>
+                   </div>
+                   <div className="space-y-2">
+                     <label className="text-[9px] font-bold uppercase tracking-widest text-slate-500 ml-1">Specific Filling</label>
+                     <input 
+                        type="text"
+                        placeholder="e.g. Raspberry Coulis"
+                        className="w-full p-3.5 bg-slate-50 rounded-lg border border-slate-100 focus:bg-white focus:border-black outline-none font-body text-xs transition-all"
+                        value={formData.filling}
+                        onChange={(e) => updateForm("filling", e.target.value)}
+                     />
+                   </div>
+                </div>
+
                 <div className="space-y-3">
-                  <label className="text-sm font-medium">Dietary Accommodations</label>
-                  <div className="flex flex-wrap gap-3">
+                  <label className="text-[9px] font-bold uppercase tracking-widest text-slate-500 ml-1">Dietary Restrictions</label>
+                  <div className="flex flex-wrap gap-2">
                     {["Gluten-Free", "Vegan", "Dairy-Free", "Nut-Free"].map(need => (
-                      <div 
+                      <button
                         key={need}
                         onClick={() => toggleDietary(need)}
-                        className={`px-4 py-2 border rounded-full cursor-pointer transition-all text-sm font-medium ${
-                          formData.dietary.includes(need)
-                            ? "bg-secondary text-secondary-foreground border-secondary"
-                            : "border-border text-muted-foreground hover:border-secondary"
+                        className={`px-5 py-2.5 rounded-full border text-[9px] font-bold uppercase tracking-widest transition-all ${
+                          formData.dietary.includes(need) ? "bg-black text-white border-black shadow-md" : "border-slate-50 bg-slate-50/50 text-slate-400 hover:border-slate-300"
                         }`}
                       >
                         {need}
-                      </div>
+                      </button>
                     ))}
                   </div>
-                  <p className="text-xs text-muted-foreground mt-2">* Additional fees may apply for special dietary requests.</p>
                 </div>
               </div>
             )}
 
-            {/* Step 3: Design Vision */}
+            {/* Step 3: Artistry */}
             {currentStep === 3 && (
-              <div className="space-y-6">
-                <h3 className="text-xl font-heading font-bold mb-4">Your Vision</h3>
-                
+              <div className="space-y-8">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Describe your dream cake</label>
+                  <p className="text-[9px] font-bold uppercase tracking-[0.4em] text-slate-400">Step 03 / Artistry</p>
+                  <h2 className="text-2xl md:text-3xl font-heading font-bold tracking-tighter text-black">Concept & Color.</h2>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[9px] font-bold uppercase tracking-widest text-slate-500 ml-1 flex items-center gap-2">
+                    <MessageSquare className="w-3.5 h-3.5" /> Design Vision
+                  </label>
                   <textarea 
-                    rows={4}
-                    className="w-full p-4 border border-border rounded-lg bg-white focus:ring-2 focus:ring-primary focus:border-primary outline-none resize-none"
-                    placeholder="Theme, colors, special decorations, written message..."
+                    rows={5}
+                    className="w-full p-6 bg-slate-50 rounded-lg border border-slate-100 focus:bg-white focus:border-black outline-none transition-all resize-none font-body text-xs text-black leading-relaxed"
+                    placeholder="Describe the mood, themes, or the specific 'feeling' of the event..."
                     value={formData.description}
                     onChange={(e) => updateForm("description", e.target.value)}
                   ></textarea>
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Inspiration Photos (Optional)</label>
-                  <div className="border-2 border-dashed border-border rounded-xl p-8 flex flex-col items-center justify-center bg-muted/30 text-muted-foreground hover:bg-muted/50 hover:border-primary/50 transition-colors cursor-pointer">
-                    <UploadCloud className="w-10 h-10 mb-3 text-primary" />
-                    <p className="text-sm font-medium">Click to upload or drag & drop</p>
-                    <p className="text-xs mt-1">PNG, JPG up to 10MB</p>
-                  </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                   <div className="space-y-2">
+                     <label className="text-[9px] font-bold uppercase tracking-widest text-slate-500 ml-1 flex items-center gap-2">
+                        <Palette className="w-3.5 h-3.5" /> Color Palette
+                     </label>
+                     <input 
+                        type="text"
+                        placeholder="e.g. Muted Sage, Pearl, Gold"
+                        className="w-full p-3.5 bg-slate-50 rounded-lg border border-slate-100 focus:bg-white focus:border-black outline-none font-body text-xs transition-all"
+                        value={formData.colors}
+                        onChange={(e) => updateForm("colors", e.target.value)}
+                     />
+                   </div>
+                   <div className="space-y-2">
+                     <label className="text-[9px] font-bold uppercase tracking-widest text-slate-500 ml-1 flex items-center gap-2">
+                        <DollarSign className="w-3.5 h-3.5" /> Investment Range
+                     </label>
+                     <div className="relative">
+                        <select 
+                          className="w-full p-3.5 bg-slate-50 rounded-lg border border-slate-100 focus:bg-white focus:border-black outline-none font-body text-xs appearance-none cursor-pointer transition-all"
+                          value={formData.budget}
+                          onChange={(e) => updateForm("budget", e.target.value)}
+                        >
+                          {BUDGET_RANGES.map(r => <option key={r.id}>{r.name}</option>)}
+                        </select>
+                        <ChevronRight className="absolute right-4 top-1/2 -translate-y-1/2 w-3 h-3 rotate-90 text-slate-300 pointer-events-none" />
+                     </div>
+                   </div>
+                </div>
+
+                <div className="border-2 border-dashed border-slate-100 rounded-lg p-10 flex flex-col items-center justify-center bg-slate-50 hover:bg-white hover:border-black transition-all cursor-pointer group">
+                  <UploadCloud className="w-10 h-10 mb-3 text-slate-200 group-hover:text-black transition-colors" />
+                  <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-400 group-hover:text-black">Upload References</p>
                 </div>
               </div>
             )}
 
-            {/* Step 4: Contact */}
+            {/* Step 4: Communication */}
             {currentStep === 4 && (
-              <div className="space-y-6">
-                <h3 className="text-xl font-heading font-bold mb-4">Final Details</h3>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium" htmlFor="name">Full Name <span className="text-destructive">*</span></label>
-                    <input 
-                      id="name"
-                      type="text"
-                      required
-                      autoComplete="name"
-                      className="w-full p-3 border border-border rounded-lg bg-white focus:ring-2 focus:ring-primary focus:border-primary outline-none"
-                      value={formData.name}
-                      onChange={(e) => updateForm("name", e.target.value)}
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium" htmlFor="email">Email Address <span className="text-destructive">*</span></label>
-                    <input 
-                      id="email"
-                      type="email"
-                      required
-                      inputMode="email"
-                      autoComplete="email"
-                      className="w-full p-3 border border-border rounded-lg bg-white focus:ring-2 focus:ring-primary focus:border-primary outline-none"
-                      value={formData.email}
-                      onChange={(e) => updateForm("email", e.target.value)}
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium" htmlFor="phone">Phone Number <span className="text-destructive">*</span></label>
-                    <input 
-                      id="phone"
-                      type="tel"
-                      required
-                      inputMode="tel"
-                      autoComplete="tel"
-                      className="w-full p-3 border border-border rounded-lg bg-white focus:ring-2 focus:ring-primary focus:border-primary outline-none"
-                      value={formData.phone}
-                      onChange={(e) => updateForm("phone", e.target.value)}
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Delivery Method</label>
-                    <select 
-                      className="w-full p-3 border border-border rounded-lg bg-white focus:ring-2 focus:ring-primary focus:border-primary outline-none"
-                      value={formData.deliveryMethod}
-                      onChange={(e) => updateForm("deliveryMethod", e.target.value)}
-                    >
-                      <option value="pickup">Bakery Pickup</option>
-                      <option value="delivery">Delivery (DFW Area)</option>
-                    </select>
-                  </div>
+              <div className="space-y-8">
+                <div className="space-y-2">
+                  <p className="text-[9px] font-bold uppercase tracking-[0.4em] text-slate-400">Step 04 / Communication</p>
+                  <h2 className="text-2xl md:text-3xl font-heading font-bold tracking-tighter text-black">Let's Connect.</h2>
                 </div>
 
-                <div className="bg-primary/5 p-4 rounded-lg mt-6 flex items-start gap-3">
-                  <div className="mt-1 flex-shrink-0">
-                    <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center">
-                      <div className="w-2.5 h-2.5 rounded-full bg-primary"></div>
-                    </div>
-                  </div>
-                  <p className="text-sm text-foreground/80">
-                    By submitting this form, you will be redirected to pay a $50 non-refundable deposit to secure your date. Chamie will contact you within 24 hours to confirm details and provide the final quote.
-                  </p>
+                <div className="grid grid-cols-1 gap-5">
+                   {[
+                     { label: "Full Name", field: "name", type: "text", placeholder: "John Doe" },
+                     { label: "Email", field: "email", type: "email", placeholder: "hello@example.com" },
+                     { label: "Phone", field: "phone", type: "tel", placeholder: "713.000.0000" }
+                   ].map(input => (
+                     <div key={input.field} className="space-y-1.5">
+                       <label className="text-[9px] font-bold uppercase tracking-widest text-slate-500 ml-1">{input.label}</label>
+                       <input 
+                         type={input.type}
+                         placeholder={input.placeholder}
+                         className={`w-full p-3.5 bg-slate-50 rounded-lg border outline-none transition-all font-body text-xs text-black focus:bg-white ${errors[input.field] ? 'border-red-300' : 'border-slate-100 focus:border-black'}`}
+                         value={(formData as any)[input.field]}
+                         onChange={(e) => updateForm(input.field, e.target.value)}
+                       />
+                     </div>
+                   ))}
+                </div>
+
+                <div className="space-y-3">
+                   <label className="text-[9px] font-bold uppercase tracking-widest text-slate-500 ml-1">Preferred Contact</label>
+                   <div className="flex gap-2">
+                     {["email", "text"].map(m => (
+                       <button
+                         key={m}
+                         onClick={() => updateForm("contactMethod", m)}
+                         className={`flex-1 py-3.5 rounded-lg border text-[9px] font-bold uppercase tracking-widest transition-all ${
+                           formData.contactMethod === m ? "bg-black text-white border-black shadow-lg" : "bg-slate-50 border-slate-100 text-slate-400"
+                         }`}
+                       >
+                         {m}
+                       </button>
+                     ))}
+                   </div>
                 </div>
               </div>
             )}
@@ -330,32 +420,31 @@ export default function MultiStepForm() {
         </AnimatePresence>
       </div>
 
-      {/* Footer Controls */}
-      <div className="px-8 py-6 bg-muted/30 border-t border-border flex justify-between items-center">
-        <Button 
-          variant="outline" 
+      {/* Footer Nav - Compact */}
+      <div className="px-10 py-6 bg-slate-50/80 backdrop-blur-sm border-t border-slate-100 flex items-center justify-between">
+        <button 
           onClick={prevStep}
-          disabled={currentStep === 1}
-          className={`${currentStep === 1 ? 'opacity-0' : 'opacity-100'} transition-opacity rounded-full px-6`}
+          disabled={currentStep === 1 || isSubmitting}
+          className={`${currentStep === 1 ? 'opacity-0 pointer-events-none' : 'opacity-100'} text-slate-400 hover:text-black font-bold uppercase tracking-[0.3em] text-[9px] flex items-center gap-2 transition-all`}
         >
-          <ChevronLeft className="w-4 h-4 mr-2" /> Back
-        </Button>
+          <ChevronLeft className="w-4 h-4" /> Back
+        </button>
         
-        {currentStep < STEPS.length ? (
-          <Button 
-            onClick={nextStep}
-            className="bg-primary hover:bg-[#d69f9f] text-white rounded-full px-8 shadow-md"
-          >
-            Next Step <ChevronRight className="w-4 h-4 ml-2" />
-          </Button>
-        ) : (
-          <Button 
-            onClick={handleSubmit}
-            className="bg-[#D4AF37] hover:bg-[#b8952b] text-white rounded-full px-8 shadow-xl hover:scale-105 transition-all"
-          >
-            Submit & Pay Deposit
-          </Button>
-        )}
+        <motion.button 
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          onClick={currentStep === 4 ? () => setIsSubmitting(true) : nextStep}
+          disabled={isSubmitting}
+          className="bg-black text-white px-10 py-4 rounded-full font-bold uppercase tracking-[0.2em] text-[10px] shadow-2xl hover:bg-zinc-800 transition-all flex items-center gap-3"
+        >
+          {isSubmitting ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : currentStep === 4 ? (
+            <>Submit Request <ChevronRight className="w-4 h-4" /></>
+          ) : (
+            <>Next Phase <ChevronRight className="w-4 h-4" /></>
+          )}
+        </motion.button>
       </div>
     </div>
   );

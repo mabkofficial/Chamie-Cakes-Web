@@ -2,54 +2,114 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Phone, Menu, X } from "lucide-react";
+import { Menu, X, Phone, Mail, Instagram, Facebook } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { buttonVariants } from "@/components/ui/button";
+import { SITE_CONFIG } from "@/lib/config";
 import { cn } from "@/lib/utils";
 
-export default function Header() {
+const navLinks = [
+  { name: "Gallery", href: "/gallery" },
+  { name: "Our Story", href: "/our-story" },
+  { name: "Contact", href: "/contact" },
+];
+
+export default function Header({ className }: { className?: string }) {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      const currentScrollY = window.scrollY;
+      
+      // Determine if scrolled enough to change style
+      setIsScrolled(currentScrollY > 20);
+
+      // Determine visibility (Hide on scroll down, show on scroll up)
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        setIsVisible(false);
+      } else {
+        setIsVisible(true);
+      }
+      
+      setLastScrollY(currentScrollY);
     };
-    window.addEventListener("scroll", handleScroll);
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [lastScrollY]);
 
   return (
     <>
-      <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? "bg-white/95 backdrop-blur-md shadow-sm py-4 border-b border-border/40" : "bg-transparent py-6"}`}>
-        <div className="container mx-auto px-4 flex items-center justify-between">
-          <Link href="/" className={`font-heading font-bold text-2xl tracking-wide ${isScrolled ? "text-foreground" : "text-white drop-shadow-md"}`}>
-            CHAMIE CAKES
-          </Link>
-
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-8">
-            <Link href="/" className={`text-sm font-medium hover:text-primary transition-colors ${isScrolled ? "text-foreground/80" : "text-white/90"}`}>Home</Link>
-            <Link href="/gallery" className={`text-sm font-medium hover:text-primary transition-colors ${isScrolled ? "text-foreground/80" : "text-white/90"}`}>Gallery</Link>
-            <Link href="/about" className={`text-sm font-medium hover:text-primary transition-colors ${isScrolled ? "text-foreground/80" : "text-white/90"}`}>About</Link>
-            <Link href="/contact" className={`text-sm font-medium hover:text-primary transition-colors ${isScrolled ? "text-foreground/80" : "text-white/90"}`}>Contact</Link>
-            <Link 
-              href="/order" 
-              className={cn(
-                buttonVariants(),
-                "bg-[#D4AF37] hover:bg-[#b8952b] text-white rounded-full transition-transform hover:scale-105 shadow-md"
-              )}
-            >
-              Order Now
-            </Link>
-          </nav>
-
-          {/* Mobile Menu Toggle */}
-          <button className="md:hidden" onClick={() => setMobileMenuOpen(true)} aria-label="Open Mobile Menu">
-            <Menu className={`w-6 h-6 ${isScrolled ? "text-foreground" : "text-white drop-shadow-sm"}`} />
-          </button>
+      <motion.header 
+        initial={{ y: 0 }}
+        animate={{ y: isVisible ? 0 : -100 }}
+        transition={{ duration: 0.4, ease: "easeInOut" }}
+        className={cn("fixed top-0 left-0 right-0 z-50 flex flex-col", className)}
+      >
+        {/* Utility Top Bar */}
+        <div className={cn(
+          "bg-black border-b border-white/5 py-2 transition-all duration-500",
+          isScrolled ? "h-0 py-0 opacity-0 overflow-hidden" : "h-auto opacity-100"
+        )}>
+          <div className="container mx-auto px-10 max-w-7xl flex justify-between items-center text-[9px] font-bold uppercase tracking-widest text-white/60">
+            <div className="flex gap-6">
+              <span className="flex items-center gap-2"><Phone className="w-3 h-3 text-white/40" /> {SITE_CONFIG.contact.phone}</span>
+              <span className="hidden sm:inline">Dallas / Fort Worth Metroplex</span>
+            </div>
+            <div className="flex gap-6">
+               <a href={SITE_CONFIG.socialLinks?.instagram} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Instagram</a>
+               <a href={SITE_CONFIG.socialLinks?.facebook} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Facebook</a>
+            </div>
+          </div>
         </div>
-      </header>
+        
+        {/* Main Nav Bar */}
+        <div className={cn(
+          "transition-all duration-500 border-b",
+          isScrolled 
+            ? "bg-white/90 backdrop-blur-md py-4 shadow-xl border-slate-100" 
+            : "bg-transparent py-6 border-slate-50"
+        )}>
+          <div className="container mx-auto px-10 max-w-7xl flex justify-between items-center">
+            <Link href="/" className="group flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-black flex items-center justify-center text-white font-bold text-lg transition-transform group-hover:rotate-12">
+                {SITE_CONFIG.name.charAt(0)}
+              </div>
+              <span className="font-heading text-xl font-bold tracking-tight text-black">
+                {SITE_CONFIG.name}
+              </span>
+            </Link>
+
+            <nav className="hidden md:flex items-center gap-12">
+              {navLinks.map(link => (
+                 <Link 
+                  key={link.href} 
+                  href={link.href} 
+                  className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-600 hover:text-black transition-colors"
+                 >
+                   {link.name}
+                 </Link>
+              ))}
+              <Link 
+                href="/order" 
+                className="bg-black text-white px-10 py-3 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-slate-800 transition-all active:scale-95 shadow-lg shadow-black/10"
+              >
+                Inquire Now
+              </Link>
+            </nav>
+
+            {/* Mobile Menu Toggle */}
+            <button 
+              className="md:hidden w-10 h-10 flex items-center justify-center text-black" 
+              onClick={() => setMobileMenuOpen(true)}
+            >
+              <Menu className="w-6 h-6" />
+            </button>
+          </div>
+        </div>
+      </motion.header>
 
       {/* Mobile Menu */}
       <AnimatePresence>
@@ -58,38 +118,33 @@ export default function Header() {
             initial={{ opacity: 0, x: "100%" }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: "100%" }}
-            transition={{ type: "spring", bounce: 0, duration: 0.4 }}
-            className="fixed inset-0 z-[60] bg-white flex flex-col p-6"
+            className="fixed inset-0 z-[60] bg-white flex flex-col p-10"
           >
-            <div className="flex justify-between items-center mb-12">
-              <span className="font-heading font-bold text-2xl text-foreground">CHAMIE CAKES</span>
-              <button onClick={() => setMobileMenuOpen(false)} aria-label="Close Mobile Menu">
-                <X className="w-6 h-6 text-foreground" />
+            <div className="flex justify-between items-center mb-20">
+              <span className="font-heading text-2xl font-bold text-black">{SITE_CONFIG.name}</span>
+              <button onClick={() => setMobileMenuOpen(false)}>
+                <X className="w-8 h-8 text-black" />
               </button>
             </div>
             
-            <nav className="flex flex-col gap-6 text-xl font-medium">
-              <Link href="/" onClick={() => setMobileMenuOpen(false)}>Home</Link>
-              <Link href="/gallery" onClick={() => setMobileMenuOpen(false)}>Gallery</Link>
-              <Link href="/about" onClick={() => setMobileMenuOpen(false)}>About</Link>
-              <Link href="/contact" onClick={() => setMobileMenuOpen(false)}>Contact</Link>
-              <a href="tel:7132693696" className="flex items-center gap-3 text-primary mt-4">
-                <Phone className="w-5 h-5" />
-                <span>Call 713.269.3696</span>
-              </a>
-            </nav>
-            
-            <div className="mt-auto pb-8">
-              <Link 
-                href="/order" 
-                onClick={() => setMobileMenuOpen(false)}
-                className={cn(
-                  buttonVariants(),
-                  "w-full bg-[#D4AF37] hover:bg-[#b8952b] text-white rounded-full py-7 text-lg shadow-lg flex items-center justify-center"
-                )}
-              >
+            <nav className="flex flex-col gap-10">
+              {navLinks.map(link => (
+                <Link key={link.href} href={link.href} onClick={() => setMobileMenuOpen(false)} className="text-5xl font-bold text-black hover:italic transition-all font-heading uppercase tracking-tighter">
+                  {link.name}
+                </Link>
+              ))}
+              <Link href="/order" onClick={() => setMobileMenuOpen(false)} className="bg-black text-white py-6 rounded-full text-center font-bold uppercase tracking-widest text-sm shadow-2xl">
                 Start Your Order
               </Link>
+            </nav>
+            
+            <div className="mt-auto pt-10 border-t border-slate-100 flex flex-col gap-4">
+               <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-slate-300">Get in Touch</p>
+               <a href={`tel:${SITE_CONFIG.contact.phone}`} className="text-xl font-heading font-bold">{SITE_CONFIG.contact.phone}</a>
+               <div className="flex gap-6 mt-4">
+                  <a href={SITE_CONFIG.socialLinks?.instagram} className="text-slate-400 hover:text-black">Instagram</a>
+                  <a href={SITE_CONFIG.socialLinks?.facebook} className="text-slate-400 hover:text-black">Facebook</a>
+               </div>
             </div>
           </motion.div>
         )}

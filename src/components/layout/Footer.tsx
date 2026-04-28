@@ -1,90 +1,77 @@
+"use client";
+
 import Link from "next/link";
-import { Phone, Mail, MapPin } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
+import { SITE_CONFIG } from "@/lib/config";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-primary/5 pt-16 pb-8 border-t border-border">
-      <div className="container mx-auto px-4 max-w-6xl">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+    <footer className="bg-black text-white pt-24 pb-12 relative overflow-hidden">
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
           
-          {/* Brand & Intro */}
-          <div className="md:col-span-1">
-            <Link href="/" className="font-heading font-bold text-2xl tracking-wide text-foreground block mb-4">
-              CHAMIE CAKES
+          {/* Brand */}
+          <div className="space-y-6">
+            <Link href="/" className="group flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-black font-heading font-bold text-lg">
+                {SITE_CONFIG.name.charAt(0)}
+              </div>
+              <span className="font-heading text-lg font-bold tracking-tight text-white">
+                {SITE_CONFIG.name}
+              </span>
             </Link>
-            <p className="text-muted-foreground text-sm leading-relaxed">
-              Handcrafted, artisanal custom cakes for life's sweetest moments in the Dallas/Fort Worth area.
+            <p className="text-white/50 text-sm leading-relaxed max-w-[200px]">
+              Bespoke artisanal bakes handcrafted in Dallas.
             </p>
           </div>
 
           {/* Quick Links */}
-          <div className="md:col-span-1">
-            <h3 className="font-heading font-bold text-lg mb-4 text-foreground">Quick Links</h3>
-            <ul className="space-y-3">
-              <li><Link href="/" className="text-muted-foreground hover:text-primary transition-colors text-sm">Home</Link></li>
-              <li><Link href="/gallery" className="text-muted-foreground hover:text-primary transition-colors text-sm">Cake Gallery</Link></li>
-              <li><Link href="/about" className="text-muted-foreground hover:text-primary transition-colors text-sm">About Chamie</Link></li>
-              <li><Link href="/order" className="text-muted-foreground hover:text-primary transition-colors text-sm">Start an Order</Link></li>
-              <li><Link href="/contact" className="text-muted-foreground hover:text-primary transition-colors text-sm">Contact Us</Link></li>
+          <div className="space-y-6">
+            <h3 className="text-white/30 font-bold tracking-[0.2em] uppercase text-[8px]">Explore</h3>
+            <ul className="grid grid-cols-1 gap-3">
+              <li><Link href="/gallery" className="text-white/60 hover:text-white transition-colors text-xs font-medium uppercase tracking-widest">Gallery</Link></li>
+              <li><Link href="/our-story" className="text-white/60 hover:text-white transition-colors text-xs font-medium uppercase tracking-widest">About</Link></li>
+              <li><Link href="/order" className="text-white/60 hover:text-white transition-colors text-xs font-medium uppercase tracking-widest">Inquire</Link></li>
             </ul>
           </div>
 
-          {/* Contact Info */}
-          <div className="md:col-span-1">
-            <h3 className="font-heading font-bold text-lg mb-4 text-foreground">Contact</h3>
-            <ul className="space-y-4">
-              <li>
-                <a href="tel:7132693696" className="flex items-center gap-3 text-muted-foreground hover:text-primary transition-colors text-sm group">
-                  <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm group-hover:bg-primary group-hover:text-white transition-colors">
-                    <Phone className="w-4 h-4" />
-                  </div>
-                  713.269.3696
-                </a>
-              </li>
-              <li>
-                <a href="mailto:hello@chamiecakes.com" className="flex items-center gap-3 text-muted-foreground hover:text-primary transition-colors text-sm group">
-                  <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm group-hover:bg-primary group-hover:text-white transition-colors">
-                    <Mail className="w-4 h-4" />
-                  </div>
-                  hello@chamiecakes.com
-                </a>
-              </li>
-              <li className="flex items-center gap-3 text-muted-foreground text-sm">
-                <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm">
-                  <MapPin className="w-4 h-4" />
-                </div>
-                Dallas / Fort Worth
-              </li>
-            </ul>
+          {/* Studio Info */}
+          <div className="space-y-6">
+            <h3 className="text-white/30 font-bold tracking-[0.2em] uppercase text-[8px]">Studio</h3>
+            <div className="space-y-3">
+              <a href={`tel:${SITE_CONFIG.contact.phone}`} className="text-xs font-medium text-white/60 hover:text-white transition-colors block tracking-widest uppercase">{SITE_CONFIG.contact.phone}</a>
+              <a href={`mailto:${SITE_CONFIG.contact.email}`} className="text-xs font-medium text-white/60 hover:text-white transition-colors block tracking-widest uppercase">{SITE_CONFIG.contact.email}</a>
+              <span className="text-xs font-medium text-white/40 block tracking-widest uppercase">Dallas, TX</span>
+            </div>
           </div>
 
-          {/* Social / Newsletter (Placeholder) */}
-          <div className="md:col-span-1">
-            <h3 className="font-heading font-bold text-lg mb-4 text-foreground">Follow Us</h3>
-            <div className="flex gap-4">
-              <a href="#" className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm hover:bg-[#D4AF37] hover:text-white transition-colors text-muted-foreground">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
-                <span className="sr-only">Instagram</span>
+          {/* Social */}
+          <div className="space-y-6">
+            <h3 className="text-white/30 font-bold tracking-[0.2em] uppercase text-[8px]">Follow</h3>
+            <div className="flex gap-6">
+              <a href={SITE_CONFIG.contact.instagram} className="text-white/50 hover:text-white transition-all group flex items-center gap-2">
+                <span className="text-[10px] font-bold uppercase tracking-widest">Instagram</span>
+                <ArrowUpRight className="w-3 h-3 text-white/20 group-hover:text-white" />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm hover:bg-[#D4AF37] hover:text-white transition-colors text-muted-foreground">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-                <span className="sr-only">Facebook</span>
+              <a href={SITE_CONFIG.contact.facebook} className="text-white/50 hover:text-white transition-all group flex items-center gap-2">
+                <span className="text-[10px] font-bold uppercase tracking-widest">Facebook</span>
+                <ArrowUpRight className="w-3 h-3 text-white/20 group-hover:text-white" />
               </a>
             </div>
           </div>
           
         </div>
 
-        {/* Copyright */}
-        <div className="pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-muted-foreground">
-            &copy; {currentYear} Chamie Cakes. All rights reserved.
+        {/* Minimal Copyright */}
+        <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-6">
+          <p className="text-[8px] text-white/30 font-bold uppercase tracking-[0.2em]">
+            &copy; {currentYear} {SITE_CONFIG.name}.
           </p>
-          <div className="flex gap-6">
-            <Link href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">Privacy Policy</Link>
-            <Link href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">Terms of Service</Link>
+          <div className="flex gap-8">
+            <Link href="#" className="text-[8px] text-white/30 hover:text-white transition-colors font-bold uppercase tracking-[0.2em]">Privacy</Link>
+            <Link href="#" className="text-[8px] text-white/30 hover:text-white transition-colors font-bold uppercase tracking-[0.2em]">Terms</Link>
           </div>
         </div>
       </div>
