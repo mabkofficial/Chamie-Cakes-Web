@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { SITE_CONFIG } from "@/lib/config";
 import { cn } from "@/lib/utils";
-import { Phone, Instagram, Facebook } from "lucide-react";
+import { Phone } from "lucide-react";
 
 export default function HeaderDoubleStack({ className }: { className?: string }) {
   return (
@@ -16,8 +16,8 @@ export default function HeaderDoubleStack({ className }: { className?: string })
             <span>Dallas / Fort Worth</span>
           </div>
           <div className="flex gap-4">
-             <Link href="#" className="hover:text-black">Instagram</Link>
-             <Link href="#" className="hover:text-black">Facebook</Link>
+             <a href={SITE_CONFIG.contact.instagram} className="hover:text-black">Instagram</a>
+             <a href={SITE_CONFIG.contact.facebook} className="hover:text-black">Facebook</a>
           </div>
         </div>
       </div>
