@@ -10,7 +10,7 @@ import { Heading } from "@/components/ui/heading";
 import { Section } from "@/components/layout/Section";
 import { SITE_CONFIG } from "@/lib/config";
 
-interface StoryData {
+export interface StoryData {
   title: string;
   bakerImage: string;
   body: string;
