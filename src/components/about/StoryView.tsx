@@ -36,7 +36,7 @@ export default function StoryView({ data }: { data: StoryData }) {
   return (
     <main className="flex flex-col min-h-screen bg-white">
       {/* Cinematic Hero */}
-      <Section className="min-h-screen flex items-center pt-32 pb-24 bg-white text-black relative overflow-hidden">
+      <Section className="min-h-[60vh] flex items-center py-0 pt-32 pb-4 md:py-0 md:pt-32 md:pb-4 bg-white text-black relative overflow-hidden">
         <motion.div 
           className="relative z-10 max-w-4xl space-y-8"
           initial={{ opacity: 0, x: -50 }}
