@@ -70,12 +70,11 @@ export default function Header({ className }: { className?: string }) {
           </div>
         </div>
         
-        {/* Main Nav Bar */}
         <div className={cn(
-          "transition-all duration-500 border-b",
+          "transition-all duration-500",
           isScrolled 
-            ? "bg-white/90 backdrop-blur-md py-4 shadow-xl border-slate-100" 
-            : "bg-transparent py-6 border-slate-50"
+            ? "bg-white/90 backdrop-blur-md py-4 shadow-xl" 
+            : "bg-transparent py-6"
         )}>
           <div className="container mx-auto px-10 max-w-7xl flex justify-between items-center">
             <Link href="/" className="group flex items-center gap-3">
