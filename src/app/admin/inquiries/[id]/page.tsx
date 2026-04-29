@@ -148,7 +148,6 @@ export default function InquiryDetailPage({ params }: { params: Promise<{ id: st
           total_amount: parseFloat(orderTotal),
           deposit_amount: parseFloat(orderDeposit || "0"),
           status: "pending",
-          email: inquiry.email // Ensure email is copied for linking
         }])
         .select()
         .single();
