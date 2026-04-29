@@ -6,7 +6,20 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { Heading } from "@/components/ui/heading";
 
-const categories = ["All", "Wedding", "Birthday", "Kids", "Holiday", "Trending"];
+const categories = [
+  "All", 
+  "Trending Cakes", 
+  "Assorted Cakes", 
+  "Kids Cakes", 
+  "Wedding Cakes", 
+  "Graduation Cakes", 
+  "Sports", 
+  "Profession Cakes", 
+  "Holiday Cakes", 
+  "Happy Hour Cakes", 
+  "Cupcakes", 
+  "Simple Cakes"
+];
 
 interface Cake {
   id: string;
