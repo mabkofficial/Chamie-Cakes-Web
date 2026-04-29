@@ -258,6 +258,8 @@ export default function ContentAdminPage() {
               </Button>
             </CardContent>
           </Card>
+        </TabsContent>
+
         <TabsContent value="specialties" className="mt-0">
           <Card className="border border-slate-200 shadow-sm bg-white rounded-lg overflow-hidden max-w-3xl">
             <CardHeader className="p-8 border-b border-slate-50 bg-slate-50/50">
