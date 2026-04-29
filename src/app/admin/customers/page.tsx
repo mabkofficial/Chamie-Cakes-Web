@@ -15,7 +15,8 @@ import {
   TrendingUp,
   Users,
   ArrowRight,
-  Sparkles
+  Sparkles,
+  Trash2
 } from "lucide-react"
 
 import {
