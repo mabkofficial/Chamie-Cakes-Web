@@ -19,6 +19,7 @@ export default function ContentAdminPage() {
   // Content State
   const [brandStory, setBrandStory] = useState({ title: "", content: "" })
   const [homeHero, setHomeHero] = useState({ title: "", subtitle: "", cta: "" })
+  const [specialties, setSpecialties] = useState({ title: "", description: "" })
 
   useEffect(() => {
     fetchData()
@@ -43,6 +44,7 @@ export default function ContentAdminPage() {
       content?.forEach(item => {
         if (item.key === "brand_story") setBrandStory(item.content)
         if (item.key === "home_hero") setHomeHero(item.content)
+        if (item.key === "specialties") setSpecialties(item.content)
       })
     } finally {
       setLoading(false)
@@ -130,6 +132,9 @@ export default function ContentAdminPage() {
             </TabsTrigger>
             <TabsTrigger value="hero" className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-black rounded-none px-0 pb-3 text-[10px] font-bold uppercase tracking-widest text-slate-400 data-[state=active]:text-black transition-all">
               <Layout className="w-3.5 h-3.5 mr-2" /> Hero Section
+            </TabsTrigger>
+            <TabsTrigger value="specialties" className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-black rounded-none px-0 pb-3 text-[10px] font-bold uppercase tracking-widest text-slate-400 data-[state=active]:text-black transition-all">
+              <Plus className="w-3.5 h-3.5 mr-2" /> Specialties
             </TabsTrigger>
           </TabsList>
 
@@ -250,6 +255,42 @@ export default function ContentAdminPage() {
               >
                 {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
                 Update Hero
+              </Button>
+            </CardContent>
+          </Card>
+        <TabsContent value="specialties" className="mt-0">
+          <Card className="border border-slate-200 shadow-sm bg-white rounded-lg overflow-hidden max-w-3xl">
+            <CardHeader className="p-8 border-b border-slate-50 bg-slate-50/50">
+              <CardTitle className="text-xl font-bold tracking-tight text-black flex items-center gap-3">
+                <Plus className="w-5 h-5 text-slate-400" /> Category Specialties
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-8 space-y-8">
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Grid Title</label>
+                <input 
+                  type="text" 
+                  value={specialties.title}
+                  onChange={(e) => setSpecialties({...specialties, title: e.target.value})}
+                  className="w-full h-12 bg-slate-50 border border-slate-100 rounded-lg px-4 text-sm font-medium outline-none focus:border-black focus:bg-white transition-all"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Intro Text</label>
+                <textarea 
+                  rows={4}
+                  value={specialties.description}
+                  onChange={(e) => setSpecialties({...specialties, description: e.target.value})}
+                  className="w-full p-4 bg-slate-50 border border-slate-100 rounded-lg text-sm font-medium outline-none focus:border-black focus:bg-white transition-all resize-none"
+                />
+              </div>
+              <Button 
+                onClick={() => saveContent("specialties", specialties)}
+                disabled={saving}
+                className="bg-black hover:bg-zinc-800 text-white px-8 h-12 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all gap-2"
+              >
+                {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                Update Grid
               </Button>
             </CardContent>
           </Card>

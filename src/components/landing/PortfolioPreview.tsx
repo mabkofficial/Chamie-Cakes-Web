@@ -15,15 +15,9 @@ interface CakeItem {
   image: string;
 }
 
-const fallbackBakes: CakeItem[] = [
-  { id: 1, title: "Summer Blossom", category: "Wedding", image: "/images/wedding.png" },
-  { id: 2, title: "Dino Adventure", category: "Birthday", image: "/images/kids.png" },
-  { id: 3, title: "Golden Elegance", category: "Anniversary", image: "/images/hero.png" },
-  { id: 4, title: "Berry Bliss", category: "Holiday", image: "/images/birthday.png" }
-];
-
 export default function PortfolioPreview({ cakes }: { cakes?: CakeItem[] }) {
-  const displayCakes = cakes && cakes.length > 0 ? cakes.slice(0, 4) : fallbackBakes;
+  if (!cakes || cakes.length === 0) return null;
+  const displayCakes = cakes.slice(0, 4);
 
   return (
     <Section>

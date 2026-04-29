@@ -19,7 +19,7 @@ export default async function Home() {
   const { data: content } = await supabase
     .from("site_content")
     .select("*")
-    .in("key", ["home_hero", "brand_story"]);
+    .in("key", ["home_hero", "brand_story", "specialties"]);
 
   const { data: gallery } = await supabase
     .from("gallery")
@@ -37,6 +37,11 @@ export default async function Home() {
   const brandStory = content?.find(c => c.key === "brand_story")?.content || {
     title: "Our Story",
     content: "Welcome to Chamie Cakes..."
+  };
+
+  const specialties = content?.find(c => c.key === "specialties")?.content || {
+    title: "Crafted for Every Celebration",
+    description: "Explore our most popular cake categories, baked fresh from scratch with love."
   };
 
   const recentCakes = gallery?.map(item => ({
@@ -76,7 +81,10 @@ export default async function Home() {
         subtitle={homeHero.subtitle} 
       />
       <AboutPreview data={brandStory} />
-      <CategoryGrid />
+      <CategoryGrid 
+        title={specialties.title} 
+        description={specialties.description} 
+      />
       <HowItWorks />
       <PortfolioPreview cakes={recentCakes} />
       <Testimonials />

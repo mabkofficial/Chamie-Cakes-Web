@@ -23,24 +23,10 @@ export default function FilterableGrid({ initialCakes = [] }: { initialCakes?: C
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
-  const defaultItems = [
-    { id: "1", title: "Midnight Bloom", category: "Wedding", image: "/images/wedding.png" },
-    { id: "2", title: "Astronaut Dreams", category: "Kids", image: "/images/kids.png" },
-    { id: "3", title: "Gilded Velvet", category: "Birthday", image: "/images/hero.png" },
-    { id: "4", title: "Winter Solstice", category: "Holiday", image: "/images/holiday.png" },
-    { id: "5", title: "Sculpted Marble", category: "Wedding", image: "/images/wedding.png" },
-    { id: "6", title: "Neon Safari", category: "Trending", image: "/images/kids.png" },
-    { id: "7", title: "Floral Cascade", category: "Wedding", image: "/images/wedding.png" },
-    { id: "8", title: "Pink Galaxy", category: "Kids", image: "/images/kids.png" },
-    { id: "9", title: "Golden Age", category: "Birthday", image: "/images/hero.png" },
-    { id: "10", title: "Silver Lining", category: "Holiday", image: "/images/holiday.png" },
-    { id: "11", title: "Pearl Petals", category: "Wedding", image: "/images/wedding.png" },
-    { id: "12", title: "Cloud Nine", category: "Kids", image: "/images/kids.png" },
-  ];
-
-  const displayItems = initialCakes.length > 0 ? initialCakes : defaultItems;
+  const displayItems = initialCakes;
 
   const filteredItems = useMemo(() => {
+    if (displayItems.length === 0) return [];
     const items = displayItems.filter(item => 
       filter === "All" ? true : (item.category || "").toLowerCase() === filter.toLowerCase()
     );
@@ -80,46 +66,58 @@ export default function FilterableGrid({ initialCakes = [] }: { initialCakes?: C
       {/* Standard Clean Grid (4 columns) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         <AnimatePresence mode="popLayout">
-          {paginatedItems.map((item, index) => (
-            <motion.div
-              key={item.id}
-              layout
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.4, delay: index * 0.05 }}
-              className="group relative"
-            >
-              <div 
-                className="relative aspect-square overflow-hidden rounded-xl bg-slate-50 shadow-sm cursor-pointer border border-slate-100"
-                onClick={() => setSelectedImage(item.image || "/images/placeholder.png")}
+          {paginatedItems.length > 0 ? (
+            paginatedItems.map((item, index) => (
+              <motion.div
+                key={item.id}
+                layout
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.4, delay: index * 0.05 }}
+                className="group relative"
               >
-                <Image
-                  src={item.image || "/images/placeholder.png"}
-                  alt={item.title || "Cake"}
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-                
-                {/* Clean Hover Overlay */}
-                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-6">
-                  <div className="flex items-center justify-between gap-4 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                    <div className="space-y-1">
-                      <span className="text-[8px] font-bold text-white/60 uppercase tracking-[0.2em]">
-                        {item.category}
-                      </span>
-                      <Heading as="h3" size="h6" className="text-white tracking-tight transition-transform duration-500 group-hover:translate-x-1">
-                        {item.title}
-                      </Heading>
-                    </div>
-                    <div className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white border border-white/20">
-                      <ArrowUpRight className="w-4 h-4" />
+                <div 
+                  className="relative aspect-square overflow-hidden rounded-xl bg-slate-50 shadow-sm cursor-pointer border border-slate-100"
+                  onClick={() => setSelectedImage(item.image || "/images/placeholder.png")}
+                >
+                  <Image
+                    src={item.image || "/images/placeholder.png"}
+                    alt={item.title || "Cake"}
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  
+                  {/* Clean Hover Overlay */}
+                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-6">
+                    <div className="flex items-center justify-between gap-4 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                      <div className="space-y-1">
+                        <span className="text-[8px] font-bold text-white/60 uppercase tracking-[0.2em]">
+                          {item.category}
+                        </span>
+                        <Heading as="h3" size="h6" className="text-white tracking-tight transition-transform duration-500 group-hover:translate-x-1">
+                          {item.title}
+                        </Heading>
+                      </div>
+                      <div className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white border border-white/20">
+                        <ArrowUpRight className="w-4 h-4" />
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            ))
+          ) : (
+            <div className="col-span-full py-32 flex flex-col items-center justify-center text-center space-y-4 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+               <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center">
+                  <X className="w-8 h-8 text-slate-300" />
+               </div>
+               <div className="space-y-1">
+                  <h3 className="text-lg font-bold text-black tracking-tight">No creations found.</h3>
+                  <p className="text-slate-400 text-sm max-w-xs">We haven't added any cakes to this category yet. Check back soon!</p>
+               </div>
+            </div>
+          )}
         </AnimatePresence>
       </div>
 
