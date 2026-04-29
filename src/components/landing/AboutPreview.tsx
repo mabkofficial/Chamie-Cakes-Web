@@ -8,7 +8,10 @@ import { Badge } from "@/components/ui/badge";
 import { Heading } from "@/components/ui/heading";
 import { Section } from "@/components/layout/Section";
 
-export default function AboutPreview() {
+export default function AboutPreview({ data }: { data?: { title: string, content: string } }) {
+  const content = data?.content || "Hi, I'm Chamie! I believe that every celebration deserves a centerpiece as unique and special as the person it's for.";
+  const title = data?.title || "Made for your sweetest celebrations.";
+
   return (
     <Section className="py-32 bg-white overflow-hidden">
       <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
@@ -52,21 +55,18 @@ export default function AboutPreview() {
         >
           <div className="space-y-4">
             <Badge variant="outline">Meet the Baker</Badge>
-            <Heading size="h2">Made for your sweetest <br /> celebrations.</Heading>
+            <Heading size="h2">{title}</Heading>
           </div>
           
           <div className="space-y-6 text-lg text-slate-500 leading-relaxed font-body">
-            <p>
-              Hi, I'm Chamie! I believe that every celebration deserves a centerpiece as unique and special as the person it's for.
-            </p>
-            <p>
-              What started as a quiet passion for making cakes has grown into a Dallas cake studio dedicated to custom designs. From whimsical birthday designs to elegant wedding masterpieces, I blend modern creativity with time-tested recipes.
+            <p className="line-clamp-6">
+              {content}
             </p>
           </div>
           
           <div className="flex flex-col sm:flex-row gap-6 pt-4">
             <Link 
-              href="/about" 
+              href="/our-story" 
               className="inline-flex items-center justify-center bg-black text-white px-10 py-5 rounded-full font-bold uppercase tracking-widest text-xs shadow-xl hover:bg-slate-800 transition-all active:scale-95"
             >
               Read Our Story

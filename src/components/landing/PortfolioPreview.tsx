@@ -8,14 +8,23 @@ import { Badge } from "@/components/ui/badge";
 import { Heading } from "@/components/ui/heading";
 import { Section } from "@/components/layout/Section";
 
-const recentBakes = [
+interface CakeItem {
+  id: string | number;
+  title: string;
+  category: string;
+  image: string;
+}
+
+const fallbackBakes: CakeItem[] = [
   { id: 1, title: "Summer Blossom", category: "Wedding", image: "/images/wedding.png" },
   { id: 2, title: "Dino Adventure", category: "Birthday", image: "/images/kids.png" },
   { id: 3, title: "Golden Elegance", category: "Anniversary", image: "/images/hero.png" },
   { id: 4, title: "Berry Bliss", category: "Holiday", image: "/images/birthday.png" }
 ];
 
-export default function PortfolioPreview() {
+export default function PortfolioPreview({ cakes }: { cakes?: CakeItem[] }) {
+  const displayCakes = cakes && cakes.length > 0 ? cakes.slice(0, 4) : fallbackBakes;
+
   return (
     <Section>
       <div className="flex flex-col md:flex-row justify-between items-center mb-16 gap-8">
@@ -33,7 +42,7 @@ export default function PortfolioPreview() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-        {recentBakes.map((bake, index) => (
+        {displayCakes.map((bake, index) => (
           <motion.div
             key={bake.id}
             initial={{ opacity: 0, y: 20 }}
