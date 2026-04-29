@@ -48,13 +48,13 @@ export default function StoryView({ data }: { data: StoryData }) {
              animate={{ opacity: 1 }}
              transition={{ delay: 0.5 }}
            >
-             <Badge variant="outline" className="border-black/10 text-black/40">Established 2018</Badge>
+             <Badge variant="outline" className="border-black/10 text-black/40">Since 2018</Badge>
            </motion.div>
            <Heading as="h1" size="h1" className="text-black tracking-tighter leading-none">
-             Baking as a <br /> Sculptural Art.
+             Cakes that <br /> look like art.
            </Heading>
            <p className="text-xl md:text-2xl text-slate-400 font-body leading-relaxed max-w-2xl">
-             We don't just bake cakes; we craft memories. Every creation is a unique intersection of architectural design and artisanal flavor.
+             We don't just bake cakes; we craft memories. Every creation is made with great design and amazing taste.
            </p>
            
         </motion.div>
@@ -85,7 +85,7 @@ export default function StoryView({ data }: { data: StoryData }) {
              />
              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60 transition-opacity group-hover:opacity-40" />
              <div className="absolute bottom-10 left-10 text-white">
-                <p className="text-[10px] font-bold uppercase tracking-[0.4em] mb-2 opacity-60">Founder & Master Baker</p>
+                <p className="text-[10px] font-bold uppercase tracking-[0.4em] mb-2 opacity-60">Founder & Baker</p>
                 <h3 className="text-2xl font-heading font-bold tracking-tight">Chamie Rochelle</h3>
              </div>
           </motion.div>
@@ -98,16 +98,16 @@ export default function StoryView({ data }: { data: StoryData }) {
             viewport={{ once: true }}
           >
             <motion.div className="space-y-4" variants={fadeInUp}>
-              <Badge variant="outline" className="border-black/10 text-black/40">The Visionary</Badge>
+              <Badge variant="outline" className="border-black/10 text-black/40">Our Story</Badge>
               <Heading size="h2">The Story Behind <br /> the Batter.</Heading>
             </motion.div>
             
             <motion.div className="text-lg text-slate-500 font-body leading-relaxed space-y-6" variants={fadeInUp}>
               <p>
-                Chamie Cakes started with a simple passion: creating edible art that tastes as good as it looks. What began in a home kitchen in Dallas has evolved into a premier custom cake studio serving the entire DFW metroplex.
+                Chamie Cakes started with a simple passion: creating edible art that tastes as good as it looks. What began in a home kitchen in Dallas has evolved into a custom cake studio serving the entire DFW area.
               </p>
               <p>
-                Founder Chamie Rochelle brings a background in sculptural art to the world of baking, treating every cake as a blank canvas for texture, color, and form.
+                Founder Chamie Rochelle brings a background in sculptural art to the world of baking, treating every cake as a chance to create something beautiful.
               </p>
             </motion.div>
 
@@ -116,15 +116,15 @@ export default function StoryView({ data }: { data: StoryData }) {
                   <div className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center group-hover:bg-black group-hover:text-white transition-all duration-500">
                     <Heart className="w-4 h-4" />
                   </div>
-                  <h4 className="text-sm font-bold uppercase tracking-widest pt-2">Handcrafted</h4>
-                  <p className="text-xs text-slate-400 font-body">No shortcuts. Everything made from scratch with premium ingredients.</p>
+                  <h4 className="text-sm font-bold uppercase tracking-widest pt-2">Handmade</h4>
+                  <p className="text-xs text-slate-400 font-body">No shortcuts. Everything made from scratch with fresh ingredients.</p>
                </div>
                <div className="space-y-2 group">
                   <div className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center group-hover:bg-black group-hover:text-white transition-all duration-500">
                     <Award className="w-4 h-4" />
                   </div>
-                  <h4 className="text-sm font-bold uppercase tracking-widest pt-2">Award Winning</h4>
-                  <p className="text-xs text-slate-400 font-body">Voted 5-stars across DFW for innovation and reliability.</p>
+                  <h4 className="text-sm font-bold uppercase tracking-widest pt-2">5-Star Reviews</h4>
+                  <p className="text-xs text-slate-400 font-body">Voted 5-stars across DFW for our creative designs and reliable service.</p>
                </div>
             </motion.div>
           </motion.div>
@@ -149,9 +149,9 @@ export default function StoryView({ data }: { data: StoryData }) {
           viewport={{ once: true }}
         >
           {[
-            { title: "Sculptural Design", desc: "We push the boundaries of cake structure, focusing on texture and modern aesthetics." },
-            { title: "Artisanal Flavor", desc: "Our recipes are curated pairings that prioritize sophisticated, balanced taste profiles." },
-            { title: "Bespoke Service", desc: "Every client experience is collaborative, from the first sketch to final delivery." },
+            { title: "Great Design", desc: "We make cakes that look amazing, focusing on modern styles and textures." },
+            { title: "Great Taste", desc: "Our cakes are made with flavors that everyone will love." },
+            { title: "Personalized Help", desc: "We work closely with you from your first idea to final delivery." },
           ].map((pillar, i) => (
             <motion.div 
               key={i} 
@@ -176,11 +176,11 @@ export default function StoryView({ data }: { data: StoryData }) {
             {...fadeInUp}
           >
              <div className="space-y-4">
-                <Badge variant="outline" className="border-black/10 text-black/40">The Studio</Badge>
-                <Heading size="h2">Our Creative Hub <br /> in Dallas-Fort Worth.</Heading>
+                <Badge variant="outline" className="border-black/10 text-black/40">Our Studio</Badge>
+                <Heading size="h2">Our Studio <br /> in Dallas-Fort Worth.</Heading>
              </div>
              <p className="text-lg text-slate-500 font-body leading-relaxed">
-               Located in the heart of Texas, our studio is where the magic happens. While we don't have a retail storefront, our private workspace is where we obsess over every petal, every pearl, and every layer.
+               Located in the heart of Texas, our studio is where the magic happens. While we don't have a storefront, our private workspace is where we focus on every detail of your cake.
              </p>
              <div className="flex items-center gap-4 text-black group">
                 <div className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center group-hover:bg-black group-hover:text-white transition-colors">
@@ -222,7 +222,7 @@ export default function StoryView({ data }: { data: StoryData }) {
             </h2>
             <div className="w-20 h-px bg-white/20 mx-auto" />
             <Link href="/order" className="inline-flex items-center gap-4 text-white font-bold uppercase tracking-[0.3em] text-[10px] group">
-              Start Your Journey With Us <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
+              Start Your Order With Us <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
             </Link>
          </motion.div>
       </Section>

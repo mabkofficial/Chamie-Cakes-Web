@@ -37,8 +37,8 @@ export default function AboutPreview() {
               <Heart className="w-6 h-6 text-black fill-black" />
             </div>
             <div>
-              <p className="text-[10px] font-bold text-black leading-tight uppercase tracking-widest">Artisanal Excellence</p>
-              <p className="text-[10px] text-slate-400 mt-1 uppercase tracking-wider">Handcrafted with Heart</p>
+              <p className="text-[10px] font-bold text-black leading-tight uppercase tracking-widest">Handmade with Love</p>
+              <p className="text-[10px] text-slate-400 mt-1 uppercase tracking-wider">Fresh from our kitchen</p>
             </div>
           </div>
         </motion.div>
@@ -60,7 +60,7 @@ export default function AboutPreview() {
               Hi, I'm Chamie! I believe that every celebration deserves a centerpiece as unique and special as the person it's for.
             </p>
             <p>
-              What started as a quiet passion for artisanal craftsmanship has grown into a boutique Dallas studio dedicated to the art of the custom cake. From whimsical birthday designs to elegant wedding masterpieces, I blend modern creativity with time-tested recipes.
+              What started as a quiet passion for making cakes has grown into a Dallas cake studio dedicated to custom designs. From whimsical birthday designs to elegant wedding masterpieces, I blend modern creativity with time-tested recipes.
             </p>
           </div>
           

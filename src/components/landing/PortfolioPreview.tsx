@@ -20,8 +20,8 @@ export default function PortfolioPreview() {
     <Section>
       <div className="flex flex-col md:flex-row justify-between items-center mb-16 gap-8">
         <div className="text-center md:text-left space-y-4">
-          <Badge variant="outline">Recent Creations</Badge>
-          <Heading size="h2">From our studio to you</Heading>
+          <Badge variant="outline">Our Recent Cakes</Badge>
+          <Heading size="h2">Cakes we've made</Heading>
         </div>
         <Link 
           href="/gallery" 

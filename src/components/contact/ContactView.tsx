@@ -27,7 +27,7 @@ const staggerContainer = {
 export default function ContactView() {
   return (
     <main className="flex flex-col min-h-screen bg-white">
-      {/* Cinematic Header */}
+      {/* Header */}
       <Section className="min-h-screen flex items-center pt-32 pb-12 overflow-hidden relative">
         <motion.div 
           className="max-w-4xl space-y-8 relative z-10"
@@ -43,10 +43,10 @@ export default function ContactView() {
              <Badge variant="outline" className="border-black/10 text-black/40">Connect</Badge>
            </motion.div>
            <Heading as="h1" size="h1" className="tracking-tighter leading-none">
-             Inquire & Inspire.
+             Get in touch.
            </Heading>
            <p className="text-xl md:text-2xl text-slate-400 font-body leading-relaxed max-xl">
-             Whether you have a vision in mind or need a professional guide, we're here to help you craft your perfect centerpiece.
+             Whether you have a vision in mind or need help with your cake, we're here to help you make your perfect cake.
            </p>
         </motion.div>
         
@@ -111,7 +111,7 @@ export default function ContactView() {
 
             {/* Socials */}
             <motion.div className="pt-16 border-t border-slate-100 space-y-8" variants={fadeInUp}>
-              <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-slate-500">Digital Gallery</p>
+              <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-slate-500">Our Social Media</p>
               <div className="flex gap-8">
 
                 <a href={SITE_CONFIG.contact.instagram} className="flex items-center gap-3 text-slate-400 hover:text-black transition-all group">
@@ -135,7 +135,7 @@ export default function ContactView() {
             transition={{ duration: 0.8 }}
           >
              <div className="space-y-4 mb-12 relative z-10">
-               <Heading as="h2" size="h3">Send a Message</Heading>
+               <Heading as="h2" size="h3">Message Us</Heading>
                <p className="text-sm text-slate-500 font-body">We'll get back to you within 24-48 business hours.</p>
              </div>
 
@@ -165,12 +165,12 @@ export default function ContactView() {
                 </motion.div>
 
                 <motion.div className="space-y-2" variants={fadeInUp}>
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400 ml-1">Your Vision</label>
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400 ml-1">Your Idea</label>
                   <textarea 
                     name="message" 
                     required 
                     rows={5}
-                    placeholder="Tell us about your event, preferred flavors, or any design inspirations you have..."
+                    placeholder="Tell us about your event, preferred flavors, or any designs you like..."
                     className="w-full bg-white px-6 py-4 rounded-xl border border-slate-100 outline-none focus:border-black transition-all text-sm font-body resize-none leading-relaxed focus:shadow-lg focus:scale-[1.01]"
                   />
                 </motion.div>
@@ -180,7 +180,7 @@ export default function ContactView() {
                   whileTap={{ scale: 0.98 }}
                   className="w-full bg-black text-white py-6 rounded-full font-bold uppercase tracking-[0.3em] text-[10px] shadow-xl hover:bg-slate-900 transition-all flex items-center justify-center gap-3 group"
                 >
-                   Send Inquiry
+                   Send Message
                    <Send className="w-3 h-3 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
                 </motion.button>
              </form>

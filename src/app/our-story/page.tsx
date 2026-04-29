@@ -4,7 +4,7 @@ import StoryView, { StoryData } from "@/components/about/StoryView";
 
 export const metadata = {
   title: `Our Story | ${SITE_CONFIG.name}`,
-  description: "Learn about the passion and artistry behind Chamie Cakes, Dallas's premier custom cake studio.",
+  description: "Learn about the passion behind Chamie Cakes, a custom cake studio in Dallas.",
 };
 
 export default function OurStoryPage() {

@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Outfit, Inter } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
-import FloatingCTA from "@/components/layout/FloatingCTA";
+
 
 const outfit = Outfit({ 
   subsets: ["latin"],
@@ -41,6 +39,7 @@ export const metadata: Metadata = {
 };
 
 import Script from "next/script";
+import PublicWrapper from "@/components/layout/PublicWrapper";
 
 export default function RootLayout({
   children,
@@ -53,12 +52,9 @@ export default function RootLayout({
         className={`${outfit.variable} ${inter.variable} min-h-full flex flex-col font-body`}
         suppressHydrationWarning
       >
-        <Header />
-        <main className="flex-grow">
+        <PublicWrapper>
           {children}
-        </main>
-        <Footer />
-        <FloatingCTA />
+        </PublicWrapper>
         <Script src="https://identity.netlify.com/v1/netlify-identity-widget.js" strategy="lazyOnload" />
       </body>
     </html>

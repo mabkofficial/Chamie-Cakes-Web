@@ -20,27 +20,27 @@ interface Cake {
 
 const processSteps = [
   { icon: <Calendar className="w-5 h-5" />, title: "Secure Your Date", desc: "Custom cakes require 2-4 weeks lead time. Book early to ensure availability." },
-  { icon: <Utensils className="w-5 h-5" />, title: "Select Your Profile", desc: "Choose from our curated flavor pairings designed for sophisticated palates." },
-  { icon: <MapPin className="w-5 h-5" />, title: "Delivery & Setup", desc: "We provide white-glove delivery across the Dallas-Fort Worth metroplex." },
+  { icon: <Utensils className="w-5 h-5" />, title: "Choose Your Flavor", desc: "Choose from our curated flavor pairings designed for everyone to enjoy." },
+  { icon: <MapPin className="w-5 h-5" />, title: "Careful Delivery", desc: "We provide careful delivery across the Dallas-Fort Worth area." },
 ];
 
 const flavors = [
   { 
     title: "Signature Velvet", 
-    description: "Deep cocoa with a hint of espresso and Madagascar vanilla bean cream.",
-    notes: "Rich, Velvety, Sophisticated",
+    description: "Deep cocoa with a hint of espresso and vanilla bean cream.",
+    notes: "Rich & Smooth",
     highlight: true
   },
   { 
-    title: "Lemon Lavendar", 
-    description: "Zesty lemon sponge infused with organic lavender and honey-infused buttercream.",
-    notes: "Floral, Bright, Delicate",
+    title: "Lemon Lavender", 
+    description: "Zesty lemon cake with organic lavender and honey buttercream.",
+    notes: "Fresh & Floral",
     highlight: false
   },
   { 
     title: "Salted Caramel", 
-    description: "Rich buttery layers with house-made fleur de sel caramel and toasted pecans.",
-    notes: "Buttery, Sweet, Textural",
+    description: "Rich buttery layers with house-made salted caramel and toasted pecans.",
+    notes: "Sweet & Salty",
     highlight: false
   },
 ];
@@ -48,7 +48,7 @@ const flavors = [
 export default function GalleryView({ cakes }: { cakes: Cake[] }) {
   return (
     <main className="flex flex-col min-h-screen bg-white">
-      {/* Clean Luxury Header */}
+      {/* Header */}
       <Section className="min-h-[60vh] flex items-center py-0 pt-32 pb-4 md:py-0 md:pt-32 md:pb-4">
         <div className="max-w-7xl w-full flex flex-col md:flex-row justify-between items-end gap-10">
           <div className="max-w-2xl space-y-4">
@@ -57,15 +57,15 @@ export default function GalleryView({ cakes }: { cakes: Cake[] }) {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <Badge variant="outline" className="border-black/10 text-black/40">Portfolio Archives</Badge>
+              <Badge variant="outline" className="border-black/10 text-black/40">Our Work</Badge>
             </motion.div>
             
             <Heading as="h1" size="h1" className="tracking-tighter">
-              Visual Inspirations.
+              Our Gallery.
             </Heading>
             
             <p className="text-lg md:text-xl text-slate-400 font-body leading-relaxed max-w-xl">
-              A curated exploration of our custom creations, where sculptural art meets artisanal baking.
+              Take a look at our custom cakes, where beautiful design meets great taste.
             </p>
           </div>
 
@@ -83,22 +83,22 @@ export default function GalleryView({ cakes }: { cakes: Cake[] }) {
         <FilterableGrid initialCakes={cakes} />
       </Section>
 
-      {/* The Custom Process */}
+      {/* The Process */}
       <Section className="py-40 bg-slate-50" containerClassName="max-w-7xl">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
           <div className="space-y-10">
             <div className="space-y-4">
-              <Badge variant="outline" className="border-black/10 text-black/40">The Journey</Badge>
+              <Badge variant="outline">How it works</Badge>
               <Heading size="h2" className="tracking-tight">
                 From Vision <br /> to Celebration.
               </Heading>
             </div>
             <p className="text-lg text-slate-500 font-body leading-relaxed max-w-md">
-              Ordering a custom cake is a collaborative art form. We guide you through every step to ensure your centerpiece is as meaningful as the event it honors.
+              Ordering a custom cake is a fun process. We guide you through every step to make sure your cake is perfect for your event.
             </p>
             <div className="pt-4">
               <a href="/order" className="inline-flex items-center gap-4 text-black font-bold uppercase tracking-widest text-[10px] hover:gap-6 transition-all group">
-                Start Your Consultation <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                Get Started <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </a>
             </div>
           </div>
@@ -119,13 +119,13 @@ export default function GalleryView({ cakes }: { cakes: Cake[] }) {
         </div>
       </Section>
 
-      {/* Flavor Spotlight - High End Rebuild */}
+      {/* Flavors */}
       <Section className="py-40 bg-white" containerClassName="max-w-7xl">
         <div className="flex flex-col md:flex-row justify-between items-end mb-24 gap-8">
           <div className="space-y-4 max-w-xl text-left">
-            <Badge variant="outline" className="border-black/10 text-black/40">Taste Profiles</Badge>
-            <Heading size="h2">The Inner Artistry</Heading>
-            <p className="text-slate-500 font-body text-lg">Sophisticated flavor pairings designed for the discerning palate.</p>
+            <Badge variant="outline" className="border-black/10 text-black/40">Flavors</Badge>
+            <Heading size="h2">Inside Our Cakes</Heading>
+            <p className="text-slate-500 font-body text-lg">Delicious flavor pairings that everyone will enjoy.</p>
           </div>
           <div className="pb-2">
              <Link href="/order" className="flex items-center gap-4 text-black font-bold uppercase tracking-[0.2em] text-[10px] group">
@@ -146,9 +146,9 @@ export default function GalleryView({ cakes }: { cakes: Cake[] }) {
                }`}
              >
                 {flavor.highlight && (
-                  <div className="absolute top-0 right-0 p-6 opacity-20">
-                    <Sparkles className="w-12 h-12" />
-                  </div>
+                   <div className="absolute top-0 right-0 p-6 opacity-20">
+                     <Sparkles className="w-12 h-12" />
+                   </div>
                 )}
                 
                 <div className="space-y-6 flex-grow">

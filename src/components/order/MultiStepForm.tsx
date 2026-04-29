@@ -6,11 +6,12 @@ import { Check, ChevronRight, ChevronLeft, UploadCloud, Loader2, Calendar, Users
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { supabase } from "@/lib/supabase";
 
 const STEPS = [
-  { id: 1, name: "The Event", icon: Calendar },
+  { id: 1, name: "The Basics", icon: Calendar },
   { id: 2, name: "The Cake", icon: Users },
-  { id: 3, name: "The Vision", icon: Palette },
+  { id: 3, name: "The Design", icon: Palette },
   { id: 4, name: "Contact", icon: MessageSquare }
 ];
 
@@ -22,9 +23,9 @@ const OCCASIONS = [
 ];
 
 const TIER_OPTIONS = [
-  { id: "1-tier", name: "1 Tier", desc: "Intimate & Modern" },
-  { id: "2-tier", name: "2 Tiers", desc: "Statement Piece" },
-  { id: "3-tier", name: "3+ Tiers", desc: "Grand Installation" }
+  { id: "1-tier", name: "1 Tier", desc: "Small & Modern" },
+  { id: "2-tier", name: "2 Tiers", desc: "Great Design" },
+  { id: "3-tier", name: "3+ Tiers", desc: "Large & Grand" }
 ];
 
 const BUDGET_RANGES = [
@@ -36,6 +37,7 @@ const BUDGET_RANGES = [
 export default function MultiStepForm() {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   
   const [formData, setFormData] = useState({
@@ -102,9 +104,95 @@ export default function MultiStepForm() {
   
   const prevStep = () => setCurrentStep(prev => Math.max(prev - 1, 1));
 
+  const handleSubmit = async () => {
+    if (!validateStep(4)) return;
+    
+    setIsSubmitting(true);
+    
+    try {
+      // 1. Sync Customer Profile
+      const { data: customerData, error: customerError } = await supabase
+        .from("customers")
+        .upsert(
+          { 
+            name: formData.name, 
+            email: formData.email, 
+            phone: formData.phone,
+            favorite_flavor: formData.flavor 
+          },
+          { onConflict: "email" }
+        )
+        .select()
+        .single();
+
+      if (customerError) throw customerError;
+
+      // 2. Insert Inquiry
+      const { error } = await supabase
+        .from("inquiries")
+        .insert([
+          {
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            contact_method: formData.contactMethod,
+            event_type: formData.eventType,
+            event_date: formData.date,
+            event_time: formData.time,
+            delivery_method: formData.deliveryMethod,
+            address: formData.address,
+            servings: formData.servings,
+            tiers: formData.tiers,
+            flavor: formData.flavor,
+            filling: formData.filling,
+            dietary: formData.dietary,
+            description: formData.description,
+            colors: formData.colors,
+            budget: formData.budget,
+          }
+        ]);
+
+      if (error) throw error;
+      
+      setIsSuccess(true);
+    } catch (error: any) {
+      console.error("Submission error:", error.message);
+      alert("Something went wrong. Please try again or contact us directly.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  if (isSuccess) {
+    return (
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="w-full bg-white rounded-xl shadow-2xl border border-slate-100 p-20 text-center space-y-8"
+      >
+        <div className="w-20 h-20 rounded-full bg-slate-50 flex items-center justify-center mx-auto">
+          <Check className="w-10 h-10 text-black" />
+        </div>
+        <div className="space-y-4">
+          <h2 className="text-3xl font-heading font-bold tracking-tighter">Order Sent.</h2>
+          <p className="text-slate-500 font-body leading-relaxed max-w-sm mx-auto">
+            Thank you for your order. Chamie will review your details and reach out within 24-48 hours.
+          </p>
+        </div>
+        <Button 
+          variant="outline" 
+          className="rounded-full px-10 py-6 border-slate-100 text-slate-400 hover:text-black transition-all"
+          onClick={() => window.location.href = "/"}
+        >
+          Return Home
+        </Button>
+      </motion.div>
+    );
+  }
+
   return (
     <div className="w-full bg-white rounded-xl shadow-2xl border border-slate-100 overflow-hidden">
-      {/* Progress Nav - Compact */}
+      {/* Progress Nav */}
       <div className="px-8 py-5 border-b border-slate-100 flex items-center justify-between">
         <div className="flex gap-4">
            {STEPS.map((step) => {
@@ -124,7 +212,7 @@ export default function MultiStepForm() {
            })}
         </div>
         <div className="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400 hidden sm:block">
-          Inquiry Phase
+          Ordering
         </div>
       </div>
 
@@ -138,12 +226,12 @@ export default function MultiStepForm() {
             transition={{ duration: 0.3 }}
             className="space-y-8 max-w-2xl mx-auto"
           >
-            {/* Step 1: Foundation */}
+            {/* Step 1: Basics */}
             {currentStep === 1 && (
               <div className="space-y-8">
                 <div className="space-y-2">
-                  <p className="text-[9px] font-bold uppercase tracking-[0.4em] text-slate-400">Step 01 / Foundation</p>
-                  <h2 className="text-2xl md:text-3xl font-heading font-bold tracking-tighter text-black">The Event Details.</h2>
+                  <p className="text-[9px] font-bold uppercase tracking-[0.4em] text-slate-400">Step 01 / Basics</p>
+                  <h2 className="text-2xl md:text-3xl font-heading font-bold tracking-tighter text-black">Event Details.</h2>
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -227,12 +315,12 @@ export default function MultiStepForm() {
               </div>
             )}
 
-            {/* Step 2: Architecture */}
+            {/* Step 2: The Cake */}
             {currentStep === 2 && (
               <div className="space-y-8">
                 <div className="space-y-2">
-                  <p className="text-[9px] font-bold uppercase tracking-[0.4em] text-slate-400">Step 02 / Architecture</p>
-                  <h2 className="text-2xl md:text-3xl font-heading font-bold tracking-tighter text-black">Scale & Profile.</h2>
+                  <p className="text-[9px] font-bold uppercase tracking-[0.4em] text-slate-400">Step 02 / The Cake</p>
+                  <h2 className="text-2xl md:text-3xl font-heading font-bold tracking-tighter text-black">Size & Flavor.</h2>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -283,7 +371,7 @@ export default function MultiStepForm() {
                      </div>
                    </div>
                    <div className="space-y-2">
-                     <label className="text-[9px] font-bold uppercase tracking-widest text-slate-500 ml-1">Specific Filling</label>
+                     <label className="text-[9px] font-bold uppercase tracking-widest text-slate-500 ml-1">Cake Filling</label>
                      <input 
                         type="text"
                         placeholder="e.g. Raspberry Coulis"
@@ -313,12 +401,12 @@ export default function MultiStepForm() {
               </div>
             )}
 
-            {/* Step 3: Artistry */}
+            {/* Step 3: Design */}
             {currentStep === 3 && (
               <div className="space-y-8">
                 <div className="space-y-2">
-                  <p className="text-[9px] font-bold uppercase tracking-[0.4em] text-slate-400">Step 03 / Artistry</p>
-                  <h2 className="text-2xl md:text-3xl font-heading font-bold tracking-tighter text-black">Concept & Color.</h2>
+                  <p className="text-[9px] font-bold uppercase tracking-[0.4em] text-slate-400">Step 03 / Design</p>
+                  <h2 className="text-2xl md:text-3xl font-heading font-bold tracking-tighter text-black">Look & Color.</h2>
                 </div>
 
                 <div className="space-y-2">
@@ -349,7 +437,7 @@ export default function MultiStepForm() {
                    </div>
                    <div className="space-y-2">
                      <label className="text-[9px] font-bold uppercase tracking-widest text-slate-500 ml-1 flex items-center gap-2">
-                        <DollarSign className="w-3.5 h-3.5" /> Investment Range
+                        <DollarSign className="w-3.5 h-3.5" /> Budget
                      </label>
                      <div className="relative">
                         <select 
@@ -371,11 +459,11 @@ export default function MultiStepForm() {
               </div>
             )}
 
-            {/* Step 4: Communication */}
+            {/* Step 4: Contact */}
             {currentStep === 4 && (
               <div className="space-y-8">
                 <div className="space-y-2">
-                  <p className="text-[9px] font-bold uppercase tracking-[0.4em] text-slate-400">Step 04 / Communication</p>
+                  <p className="text-[9px] font-bold uppercase tracking-[0.4em] text-slate-400">Step 04 / Contact</p>
                   <h2 className="text-2xl md:text-3xl font-heading font-bold tracking-tighter text-black">Let's Connect.</h2>
                 </div>
 
@@ -420,7 +508,7 @@ export default function MultiStepForm() {
         </AnimatePresence>
       </div>
 
-      {/* Footer Nav - Compact */}
+      {/* Footer Nav */}
       <div className="px-10 py-6 bg-slate-50/80 backdrop-blur-sm border-t border-slate-100 flex items-center justify-between">
         <button 
           onClick={prevStep}
@@ -433,16 +521,16 @@ export default function MultiStepForm() {
         <motion.button 
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          onClick={currentStep === 4 ? () => setIsSubmitting(true) : nextStep}
+          onClick={currentStep === 4 ? handleSubmit : nextStep}
           disabled={isSubmitting}
           className="bg-black text-white px-10 py-4 rounded-full font-bold uppercase tracking-[0.2em] text-[10px] shadow-2xl hover:bg-zinc-800 transition-all flex items-center gap-3"
         >
           {isSubmitting ? (
             <Loader2 className="w-4 h-4 animate-spin" />
           ) : currentStep === 4 ? (
-            <>Submit Request <ChevronRight className="w-4 h-4" /></>
+            <>Submit <ChevronRight className="w-4 h-4" /></>
           ) : (
-            <>Next Phase <ChevronRight className="w-4 h-4" /></>
+            <>Next <ChevronRight className="w-4 h-4" /></>
           )}
         </motion.button>
       </div>

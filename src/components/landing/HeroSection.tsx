@@ -29,7 +29,7 @@ export default function HeroSection({
             >
               <Badge variant="default" className="gap-2">
                 <Star className="w-3 h-3 fill-slate-400 text-slate-400" />
-                Dallas' Premier Custom Studio
+                Custom Cakes in Dallas
               </Badge>
             </motion.div>
 

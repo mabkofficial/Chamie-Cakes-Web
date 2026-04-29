@@ -23,7 +23,7 @@ export default function Footer() {
               </span>
             </Link>
             <p className="text-white/50 text-sm leading-relaxed max-w-[200px]">
-              Bespoke artisanal bakes handcrafted in Dallas.
+              Custom cakes made with love in Dallas.
             </p>
           </div>
 
@@ -33,7 +33,7 @@ export default function Footer() {
             <ul className="grid grid-cols-1 gap-3">
               <li><Link href="/gallery" className="text-white/60 hover:text-white transition-colors text-xs font-medium uppercase tracking-widest">Gallery</Link></li>
               <li><Link href="/our-story" className="text-white/60 hover:text-white transition-colors text-xs font-medium uppercase tracking-widest">About</Link></li>
-              <li><Link href="/order" className="text-white/60 hover:text-white transition-colors text-xs font-medium uppercase tracking-widest">Inquire</Link></li>
+              <li><Link href="/order" className="text-white/60 hover:text-white transition-colors text-xs font-medium uppercase tracking-widest">Order</Link></li>
             </ul>
           </div>
 

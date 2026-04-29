@@ -48,7 +48,7 @@ const categories = [
   {
     id: "cupcakes",
     title: "Cupcakes",
-    description: "Personal sized bites of joy",
+    description: "Small, tasty cupcakes",
     image: "/images/about-preview.png", // Reusing image for placeholder
     link: "/gallery?filter=cupcakes"
   }
@@ -92,7 +92,7 @@ export default function CategoryGrid({
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
           >
-            <Badge variant="outline">Delicious Specialties</Badge>
+            <Badge variant="outline">Our Cakes</Badge>
           </motion.div>
           
           <Heading size="h2">

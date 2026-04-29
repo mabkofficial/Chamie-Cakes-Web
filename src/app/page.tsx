@@ -12,7 +12,7 @@ import Script from "next/script";
 
 export const metadata = {
   title: `${SITE_CONFIG.name} | Custom Cakes in Dallas/Fort Worth`,
-  description: "Handcrafted, artisanal custom cakes for weddings, birthdays, and special events in the Dallas/Fort Worth area.",
+  description: "Handcrafted custom cakes for weddings, birthdays, and special events in the Dallas/Fort Worth area.",
 };
 
 export default function Home() {

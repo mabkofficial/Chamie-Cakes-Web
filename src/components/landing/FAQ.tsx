@@ -41,18 +41,18 @@ export default function FAQ() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
             >
-              <Badge variant="outline">Common Inquiries</Badge>
+              <Badge variant="outline">Questions</Badge>
             </motion.div>
             <Heading size="h2">Need more <br />details?</Heading>
           </div>
           
           <p className="text-slate-400 font-body leading-relaxed">
-            Everything you need to know about the boutique cake experience at Chamie Cakes. Still have questions? Reach out to us directly.
+            Everything you need to know about the ordering process at Chamie Cakes. Still have questions? Reach out to us directly.
           </p>
           
           <div className="pt-4">
              <a href="/contact" className="inline-flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.3em] text-black group">
-                Contact Studio
+                Contact Us
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-2" />
              </a>
           </div>

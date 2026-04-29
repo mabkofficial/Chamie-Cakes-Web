@@ -33,14 +33,14 @@ export default function HowItWorks() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
           >
-            <Badge variant="outline" className="border-black/10 text-black/40">The Experience</Badge>
+            <Badge variant="outline" className="border-black/10 text-black/40">How it works</Badge>
           </motion.div>
           <Heading id="how-it-works-heading" size="h2">
             Your dream cake, <br className="hidden md:block" /> in three simple steps.
           </Heading>
         </div>
         <p className="text-slate-400 text-lg font-body max-w-sm leading-relaxed pt-4">
-          A seamless boutique process designed to take the stress out of your celebration planning.
+          A simple process to help you plan your celebration.
         </p>
       </div>
 

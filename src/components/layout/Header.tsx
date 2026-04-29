@@ -57,7 +57,7 @@ export default function Header({ className }: { className?: string }) {
           <div className="container mx-auto px-10 max-w-7xl flex justify-between items-center text-[9px] font-bold uppercase tracking-widest text-white/60">
             <div className="flex gap-6">
               <span className="flex items-center gap-2"><Phone className="w-3 h-3 text-white/40" /> {SITE_CONFIG.contact.phone}</span>
-              <span className="hidden sm:inline">Dallas / Fort Worth Metroplex</span>
+              <span className="hidden sm:inline">Dallas / Fort Worth Area</span>
             </div>
             <div className="flex gap-4">
                <a href={SITE_CONFIG.contact.instagram} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
@@ -101,7 +101,7 @@ export default function Header({ className }: { className?: string }) {
                 href="/order" 
                 className="bg-black text-white px-10 py-3 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-slate-800 transition-all active:scale-95 shadow-lg shadow-black/10"
               >
-                Inquire Now
+                Order Your Cake
               </Link>
             </nav>
 
@@ -139,7 +139,7 @@ export default function Header({ className }: { className?: string }) {
                 </Link>
               ))}
               <Link href="/order" onClick={() => setMobileMenuOpen(false)} className="bg-black text-white py-6 rounded-full text-center font-bold uppercase tracking-widest text-sm shadow-2xl">
-                Start Your Order
+                Order Your Cake
               </Link>
             </nav>
             

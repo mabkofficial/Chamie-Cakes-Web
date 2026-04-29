@@ -61,7 +61,7 @@ export default function Testimonials() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
           >
-            <Badge variant="outline">Kind Words</Badge>
+            <Badge variant="outline">Reviews</Badge>
           </motion.div>
           <Heading size="h2">What our clients say</Heading>
           <p className="text-slate-500 font-body text-lg">Real stories from the beautiful celebrations we've been honored to join.</p>

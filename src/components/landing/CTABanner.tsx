@@ -48,7 +48,7 @@ export default function CTABanner({ phone = SITE_CONFIG.contact.phone }: { phone
               href="/order" 
               className="inline-flex items-center gap-6 bg-white text-black px-14 py-6 rounded-full font-bold text-xs uppercase tracking-[0.2em] hover:scale-105 transition-all shadow-2xl active:scale-95 group"
             >
-              Inquire Now
+              Order Your Cake
               <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-2" />
             </Link>
           </div>
