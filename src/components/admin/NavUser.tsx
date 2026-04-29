@@ -7,6 +7,7 @@ import {
   Bell,
   UserCircle,
 } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 import {
   Avatar,
@@ -39,6 +40,17 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar()
+  const router = useRouter()
+
+  const handleSignOut = async () => {
+    try {
+      await fetch("/api/admin/auth", { method: "DELETE" })
+      router.push("/admin/login")
+      router.refresh()
+    } catch (error) {
+      console.error("Failed to sign out", error)
+    }
+  }
 
   return (
     <SidebarMenu>
@@ -86,7 +98,10 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="rounded-sm text-red-600 cursor-pointer py-2">
+            <DropdownMenuItem 
+              className="rounded-sm text-red-600 cursor-pointer py-2"
+              onClick={handleSignOut}
+            >
               <LogOut className="mr-2 h-4 w-4" />
               <span className="text-sm">Sign Out</span>
             </DropdownMenuItem>

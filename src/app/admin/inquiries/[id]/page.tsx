@@ -295,9 +295,17 @@ export default function InquiryDetailPage({ params }: { params: Promise<{ id: st
               
               <div className="bg-white rounded-lg border border-slate-200 p-8 space-y-8 shadow-sm">
                  <div className="p-6 bg-slate-50 border border-slate-100 rounded">
-                    <p className="text-base font-medium leading-relaxed text-slate-700 italic">
+                    <p className="text-base font-medium leading-relaxed text-slate-700 italic mb-4">
                       "{inquiry.description || "No specific vision notes provided."}"
                     </p>
+                    {inquiry.image_url && (
+                      <div className="mt-4 pt-4 border-t border-slate-200">
+                        <p className="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-3">Reference Image</p>
+                        <a href={inquiry.image_url} target="_blank" rel="noopener noreferrer">
+                          <img src={inquiry.image_url} alt="Reference" className="w-48 h-48 object-cover rounded border border-slate-200 hover:opacity-90 transition-opacity" />
+                        </a>
+                      </div>
+                    )}
                  </div>
 
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-6 border-t border-slate-100">

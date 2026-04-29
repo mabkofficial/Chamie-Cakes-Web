@@ -57,7 +57,9 @@ export default function MultiStepForm() {
     phone: "",
     contactMethod: "email",
     deliveryMethod: "pickup",
-    address: ""
+    address: "",
+    imageFile: null as File | null,
+    imagePreview: ""
   });
 
   const updateForm = (field: string, value: any) => {
@@ -127,6 +129,25 @@ export default function MultiStepForm() {
 
       if (customerError) throw customerError;
 
+      let imageUrl = null;
+
+      if (formData.imageFile) {
+        const fileExt = formData.imageFile.name.split('.').pop();
+        const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from("reference-images")
+          .upload(fileName, formData.imageFile);
+
+        if (uploadError) {
+          console.error("Upload error:", uploadError);
+        } else if (uploadData) {
+          const { data: { publicUrl } } = supabase.storage
+            .from("reference-images")
+            .getPublicUrl(uploadData.path);
+          imageUrl = publicUrl;
+        }
+      }
+
       // 2. Insert Inquiry
       const { error } = await supabase
         .from("inquiries")
@@ -149,6 +170,7 @@ export default function MultiStepForm() {
             description: formData.description,
             colors: formData.colors,
             budget: formData.budget,
+            image_url: imageUrl,
           }
         ]);
 
@@ -452,9 +474,37 @@ export default function MultiStepForm() {
                    </div>
                 </div>
 
-                <div className="border-2 border-dashed border-slate-100 rounded-lg p-10 flex flex-col items-center justify-center bg-slate-50 hover:bg-white hover:border-black transition-all cursor-pointer group">
-                  <UploadCloud className="w-10 h-10 mb-3 text-slate-200 group-hover:text-black transition-colors" />
-                  <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-400 group-hover:text-black">Upload References</p>
+                <div className="relative border-2 border-dashed border-slate-100 rounded-lg p-10 flex flex-col items-center justify-center bg-slate-50 hover:bg-white hover:border-black transition-all cursor-pointer group overflow-hidden">
+                  <input 
+                    type="file" 
+                    accept="image/*"
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                    onChange={(e) => {
+                      if (e.target.files?.[0]) {
+                        const file = e.target.files[0];
+                        updateForm("imageFile", file);
+                        const reader = new FileReader();
+                        reader.onload = (e) => updateForm("imagePreview", e.target?.result as string);
+                        reader.readAsDataURL(file);
+                      }
+                    }}
+                  />
+                  {formData.imagePreview ? (
+                    <div className="absolute inset-0 w-full h-full">
+                      <img src={formData.imagePreview} alt="Reference Preview" className="w-full h-full object-cover opacity-50 group-hover:opacity-30 transition-opacity" />
+                      <div className="absolute inset-0 flex flex-col items-center justify-center">
+                         <Check className="w-10 h-10 mb-3 text-black" />
+                         <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-black">Image Selected</p>
+                         <p className="text-[8px] uppercase tracking-widest text-slate-500 mt-1">Click to change</p>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <UploadCloud className="w-10 h-10 mb-3 text-slate-200 group-hover:text-black transition-colors" />
+                      <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-400 group-hover:text-black">Upload Reference</p>
+                      <p className="text-[8px] uppercase tracking-widest text-slate-400 mt-2 text-center max-w-[200px]">Optional. Share an image that inspired your vision.</p>
+                    </>
+                  )}
                 </div>
               </div>
             )}
