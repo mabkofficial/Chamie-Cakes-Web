@@ -53,7 +53,7 @@ export default function PortfolioPreview() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-8" />
               
               <div className="absolute inset-0 flex flex-col justify-end p-8 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
-                <Badge variant="dark" className="bg-white/20 text-white w-fit mb-2">
+                <Badge variant="default" className="bg-white/20 text-white w-fit mb-2">
                   {bake.category}
                 </Badge>
                 <Heading as="h4" size="h5" className="text-white">{bake.title}</Heading>
