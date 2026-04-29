@@ -9,58 +9,33 @@ import { Badge } from "@/components/ui/badge";
 import { Heading } from "@/components/ui/heading";
 import { Section } from "@/components/layout/Section";
 
-const categories = [
-  {
-    id: "wedding",
-    title: "Wedding",
-    description: "Elegant tiers for your special day",
-    image: "/images/wedding.png",
-    link: "/gallery?filter=wedding"
-  },
-  {
-    id: "birthday",
-    title: "Birthday",
-    description: "Custom creations for any age",
-    image: "/images/birthday.png",
-    link: "/gallery?filter=birthday"
-  },
-  {
-    id: "kids",
-    title: "Kids",
-    description: "Fun, colorful, and imaginative",
-    image: "/images/kids.png",
-    link: "/gallery?filter=kids"
-  },
-  {
-    id: "holiday",
-    title: "Holiday & Special",
-    description: "Seasonal treats & themed bakes",
-    image: "/images/holiday.png",
-    link: "/gallery?filter=holiday"
-  },
-  {
-    id: "corporate",
-    title: "Corporate",
-    description: "Branded treats for your business",
-    image: "/images/hero.png", // Reusing image for placeholder
-    link: "/gallery?filter=corporate"
-  },
-  {
-    id: "cupcakes",
-    title: "Cupcakes",
-    description: "Small, tasty cupcakes",
-    image: "/images/about-preview.png", // Reusing image for placeholder
-    link: "/gallery?filter=cupcakes"
-  }
+interface CategoryItem {
+  id: string;
+  title: string;
+  description: string;
+  image: string;
+  link: string;
+}
+
+const defaultCategories: CategoryItem[] = [
+  { id: "wedding", title: "Wedding", description: "Elegant tiers for your special day", image: "/images/wedding.png", link: "/gallery?filter=wedding" },
+  { id: "birthday", title: "Birthday", description: "Custom creations for any age", image: "/images/birthday.png", link: "/gallery?filter=birthday" },
+  { id: "kids", title: "Kids", description: "Fun, colorful, and imaginative", image: "/images/kids.png", link: "/gallery?filter=kids" },
+  { id: "holiday", title: "Holiday & Special", description: "Seasonal treats & themed bakes", image: "/images/holiday.png", link: "/gallery?filter=holiday" },
+  { id: "corporate", title: "Corporate", description: "Branded treats for your business", image: "/images/hero.png", link: "/gallery?filter=corporate" },
+  { id: "cupcakes", title: "Cupcakes", description: "Small, tasty cupcakes", image: "/images/about-preview.png", link: "/gallery?filter=cupcakes" }
 ];
 
 export default function CategoryGrid({ 
   title = "Our Specialities", 
-  description = "Explore our most popular cake categories, baked fresh from scratch with love." 
+  description = "Explore our most popular cake categories, baked fresh from scratch with love.",
+  items = defaultCategories
 }: { 
   title?: string; 
   description?: string; 
+  items?: CategoryItem[];
 }) {
+  const categories = items && items.length > 0 ? items : defaultCategories;
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
 

@@ -7,34 +7,30 @@ import { Badge } from "@/components/ui/badge";
 import { Heading } from "@/components/ui/heading";
 import { Section } from "@/components/layout/Section";
 
-const testimonials = [
-  {
-    name: "Sarah Jenkins",
-    text: "The wedding cake Chamie made for us was not only stunning but the most delicious cake we've ever had. Our guests are still talking about it!",
-    role: "Bride",
-    rating: 5
-  },
-  {
-    name: "Michael Chen",
-    text: "Ordered a 1st birthday cake for my son. The attention to detail was incredible. She perfectly captured the theme we wanted.",
-    role: "Parent",
-    rating: 5
-  },
-  {
-    name: "Elena Rodriguez",
-    text: "Chamie is a true artist. I gave her a rough idea for my anniversary and she turned it into a masterpiece. Highly recommend!",
-    role: "Returning Customer",
-    rating: 5
-  },
-  {
-    name: "David Thompson",
-    text: "Professional, creative, and remarkably talented. The corporate branding on the cake pops was flawless. A big hit at our launch!",
-    role: "Marketing Director",
-    rating: 5
-  }
+interface Testimonial {
+  name: string;
+  role: string;
+  rating: number;
+  text: string;
+}
+
+interface TestimonialsData {
+  title: string;
+  subtitle: string;
+  list: Testimonial[];
+}
+
+const defaultTestimonials: Testimonial[] = [
+  { name: "Sarah Jenkins", role: "Wedding Client", rating: 5, text: "The cake was absolutely breathtaking. Not only did it look like a piece of art, but every guest raved about the flavor. Chamie truly listened to our vision." },
+  { name: "Michael Chen", role: "Birthday Party", rating: 5, text: "I ordered a custom space-themed cake for my son's 5th birthday. The level of detail was incredible! It was the talk of the party." },
+  { name: "Elena Rodriguez", role: "Anniversary", rating: 5, text: "Simple, elegant, and delicious. The salted caramel flavor is out of this world. We'll be ordering for every event from now on." },
+  { name: "David Thompson", role: "Corporate Event", rating: 5, text: "Professional, timely, and the cakes were perfect. They captured our brand colors beautifully in the decorations." }
 ];
 
-export default function Testimonials() {
+export default function Testimonials({ data }: { data?: TestimonialsData }) {
+  const title = data?.title || "Loved by our clients.";
+  const subtitle = data?.subtitle || "Nothing makes us happier than being part of your most special moments.";
+  const testimonials = data?.list || defaultTestimonials;
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -55,16 +51,18 @@ export default function Testimonials() {
   return (
     <Section className="py-40 bg-slate-50 relative overflow-hidden">
       <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
-        <div className="space-y-4 max-w-2xl text-left">
+        <div className="space-y-4 max-w-2xl">
           <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
           >
-            <Badge variant="outline">Reviews</Badge>
+            <Badge variant="outline">Testimonials</Badge>
           </motion.div>
-          <Heading size="h2">What our clients say</Heading>
-          <p className="text-slate-500 font-body text-lg">Real stories from the beautiful celebrations we've been honored to join.</p>
+          <Heading size="h2">{title}</Heading>
+          <p className="text-slate-400 text-lg font-body leading-relaxed">
+            {subtitle}
+          </p>
         </div>
 
         {/* Navigation Arrows */}

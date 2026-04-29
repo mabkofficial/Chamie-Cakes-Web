@@ -7,7 +7,18 @@ import { Badge } from "@/components/ui/badge";
 import { Heading } from "@/components/ui/heading";
 import { Section } from "@/components/layout/Section";
 
-const faqs = [
+interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+interface FAQData {
+  title: string;
+  subtitle: string;
+  questions: FAQItem[];
+}
+
+const defaultFaqs: FAQItem[] = [
   {
     question: "How far in advance should I order?",
     answer: "We recommend booking at least 2-4 weeks in advance for standard custom cakes, and 3-6 months for wedding cakes. However, don't hesitate to check for last-minute availability!"
@@ -26,7 +37,10 @@ const faqs = [
   }
 ];
 
-export default function FAQ() {
+export default function FAQ({ data }: { data?: FAQData }) {
+  const title = data?.title || "Need more details?";
+  const subtitle = data?.subtitle || "Everything you need to know about the ordering process at Chamie Cakes. Still have questions? Reach out to us directly.";
+  const faqs = data?.questions || defaultFaqs;
   const [activeIndex, setActiveIndex] = useState<number | null>(0);
 
   return (
@@ -43,11 +57,15 @@ export default function FAQ() {
             >
               <Badge variant="outline">Questions</Badge>
             </motion.div>
-            <Heading size="h2">Need more <br />details?</Heading>
+            <Heading size="h2">
+              {title.includes('<br') ? (
+                <span dangerouslySetInnerHTML={{ __html: title }} />
+              ) : title}
+            </Heading>
           </div>
           
           <p className="text-slate-400 font-body leading-relaxed">
-            Everything you need to know about the ordering process at Chamie Cakes. Still have questions? Reach out to us directly.
+            {subtitle}
           </p>
           
           <div className="pt-4">

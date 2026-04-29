@@ -5,7 +5,19 @@ import { Badge } from "@/components/ui/badge";
 import { Heading } from "@/components/ui/heading";
 import { Section } from "@/components/layout/Section";
 
-const steps = [
+interface Step {
+  number: string;
+  title: string;
+  description: string;
+}
+
+interface HowItWorksData {
+  title: string;
+  subtitle: string;
+  steps: Step[];
+}
+
+const defaultSteps: Step[] = [
   {
     number: "01",
     title: "Share Your Vision",
@@ -23,7 +35,10 @@ const steps = [
   }
 ];
 
-export default function HowItWorks() {
+export default function HowItWorks({ data }: { data?: HowItWorksData }) {
+  const title = data?.title || "Your dream cake, in three simple steps.";
+  const subtitle = data?.subtitle || "A simple process to help you plan your celebration.";
+  const steps = data?.steps || defaultSteps;
   return (
     <Section className="py-40 bg-white" aria-labelledby="how-it-works-heading">
       <div className="flex flex-col lg:flex-row justify-between items-start mb-24 gap-12">
@@ -36,11 +51,13 @@ export default function HowItWorks() {
             <Badge variant="outline" className="border-black/10 text-black/40">How it works</Badge>
           </motion.div>
           <Heading id="how-it-works-heading" size="h2">
-            Your dream cake, <br className="hidden md:block" /> in three simple steps.
+            {title.includes('<br') ? (
+              <span dangerouslySetInnerHTML={{ __html: title }} />
+            ) : title}
           </Heading>
         </div>
         <p className="text-slate-400 text-lg font-body max-w-sm leading-relaxed pt-4">
-          A simple process to help you plan your celebration.
+          {subtitle}
         </p>
       </div>
 
