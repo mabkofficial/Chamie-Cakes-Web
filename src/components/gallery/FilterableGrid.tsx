@@ -8,17 +8,12 @@ import { Heading } from "@/components/ui/heading";
 
 const categories = [
   "All", 
-  "Trending Cakes", 
-  "Assorted Cakes", 
-  "Kids Cakes", 
-  "Wedding Cakes", 
-  "Graduation Cakes", 
-  "Sports", 
-  "Profession Cakes", 
-  "Holiday Cakes", 
-  "Happy Hour Cakes", 
-  "Cupcakes", 
-  "Simple Cakes"
+  "Trending", 
+  "Signature", 
+  "Weddings", 
+  "Kids", 
+  "Celebrations", 
+  "Cupcakes"
 ];
 
 interface Cake {
