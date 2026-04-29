@@ -32,7 +32,7 @@ export default function ContactView() {
   return (
     <main className="flex flex-col min-h-screen bg-white">
       {/* Header */}
-      <Section className="min-h-[50vh] flex items-center pt-32 pb-12">
+      <Section className="min-h-[60vh] flex items-center py-0 pt-32 pb-4 md:py-0 md:pt-32 md:pb-4">
         <div className="max-w-4xl space-y-8">
           <Badge variant="outline" className="border-black/10 text-black/40">Connect</Badge>
           <Heading as="h1" size="h1" className="tracking-tighter leading-none">
