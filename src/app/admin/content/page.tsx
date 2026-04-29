@@ -1,516 +1,68 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { FileText, Image as ImageIcon, Settings, Layout, UploadCloud, Plus, X, Loader2, Save } from "lucide-react"
-import { supabase } from "@/lib/supabase"
+import { Card, CardContent } from "@/components/ui/card"
+import { Layout, Image as ImageIcon, FileText, Settings, ArrowRight } from "lucide-react"
+import Link from "next/link"
 
-export default function ContentAdminPage() {
-  const [activeTab, setActiveTab] = useState("gallery")
-  const [loading, setLoading] = useState(false)
-  const [saving, setSaving] = useState(false)
-  
-  // Gallery State
-  const [galleryItems, setGalleryItems] = useState<any[]>([])
-  const [uploading, setUploading] = useState(false)
-
-  // Content State
-  const [brandStory, setBrandStory] = useState({ title: "", content: "" })
-  const [homeHero, setHomeHero] = useState({ title: "", subtitle: "", cta: "" })
-  const [specialties, setSpecialties] = useState({ title: "", description: "" })
-  const [howItWorks, setHowItWorks] = useState<any>({ title: "", subtitle: "", steps: [] })
-  const [testimonials, setTestimonials] = useState<any>({ title: "", subtitle: "", list: [] })
-  const [faqs, setFaqs] = useState<any>({ title: "", subtitle: "", questions: [] })
-
-  useEffect(() => {
-    fetchData()
-  }, [])
-
-  async function fetchData() {
-    setLoading(true)
-    try {
-      // Fetch Gallery
-      const { data: gallery } = await supabase
-        .from("gallery")
-        .select("*")
-        .order("display_order", { ascending: true })
-      
-      if (gallery) setGalleryItems(gallery)
-
-      // Fetch Site Content
-      const { data: content } = await supabase
-        .from("site_content")
-        .select("*")
-      
-      content?.forEach(item => {
-        if (item.key === "brand_story") setBrandStory(item.content)
-        if (item.key === "home_hero") setHomeHero(item.content)
-        if (item.key === "specialties") setSpecialties(item.content)
-        if (item.key === "how_it_works") setHowItWorks(item.content)
-        if (item.key === "testimonials") setTestimonials(item.content)
-        if (item.key === "faqs") setFaqs(item.content)
-      })
-    } finally {
-      setLoading(false)
-    }
+const pages = [
+  {
+    title: "Homepage",
+    slug: "home",
+    description: "Edit hero, brand story, process, and testimonials.",
+    icon: Layout,
+    color: "bg-blue-50 text-blue-500"
+  },
+  {
+    title: "Gallery Page",
+    slug: "gallery",
+    description: "Manage filter categories and display settings.",
+    icon: ImageIcon,
+    color: "bg-purple-50 text-purple-500"
+  },
+  {
+    title: "About Page",
+    slug: "about",
+    description: "Edit your biography, images, and brand mission.",
+    icon: FileText,
+    color: "bg-emerald-50 text-emerald-500"
+  },
+  {
+    title: "Global Settings",
+    slug: "settings",
+    description: "Social links, contact info, and site-wide banners.",
+    icon: Settings,
+    color: "bg-slate-50 text-slate-500"
   }
+]
 
-  async function saveContent(key: string, data: any) {
-    setSaving(true)
-    try {
-      const { error } = await supabase
-        .from("site_content")
-        .upsert({ key, content: data })
-      
-      if (error) throw error
-      alert("Content saved successfully.")
-    } catch (err: any) {
-      alert("Error saving: " + err.message)
-    } finally {
-      setSaving(false)
-    }
-  }
-
-  async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
-    if (!e.target.files?.[0]) return
-    const file = e.target.files[0]
-    setUploading(true)
-
-    try {
-      const fileExt = file.name.split('.').pop()
-      const fileName = `${Date.now()}.${fileExt}`
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from("gallery-images")
-        .upload(fileName, file)
-
-      if (uploadError) throw uploadError
-
-      const { data: { publicUrl } } = supabase.storage
-        .from("gallery-images")
-        .getPublicUrl(uploadData.path)
-
-      const { data: newItem, error: insertError } = await supabase
-        .from("gallery")
-        .insert([{ 
-          image_url: publicUrl, 
-          display_order: galleryItems.length 
-        }])
-        .select()
-        .single()
-
-      if (insertError) throw insertError
-      setGalleryItems([...galleryItems, newItem])
-    } catch (err: any) {
-      alert("Upload failed: " + err.message)
-    } finally {
-      setUploading(false)
-    }
-  }
-
-  async function deleteGalleryItem(id: string) {
-    if (!confirm("Are you sure?")) return
-    try {
-      await supabase.from("gallery").delete().eq("id", id)
-      setGalleryItems(galleryItems.filter(item => item.id !== id))
-    } catch (err: any) {
-      alert("Delete failed")
-    }
-  }
-
+export default function ContentDashboard() {
   return (
-    <div className="flex flex-col gap-10">
-      {/* Header */}
+    <div className="space-y-10">
       <div className="flex flex-col gap-1">
         <h1 className="text-3xl font-bold tracking-tight text-black">Website Content</h1>
-        <p className="text-slate-500 text-sm font-medium">Manage your brand's digital presence directly.</p>
+        <p className="text-slate-500 text-sm font-medium">Select a page to manage its content and imagery.</p>
       </div>
 
-      <Tabs defaultValue="gallery" onValueChange={setActiveTab} className="w-full">
-        <div className="flex items-center justify-between mb-8 border-b border-slate-100 pb-2">
-          <TabsList className="bg-transparent gap-8 h-auto p-0">
-            <TabsTrigger value="gallery" className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-black rounded-none px-0 pb-3 text-[10px] font-bold uppercase tracking-widest text-slate-400 data-[state=active]:text-black transition-all">
-              <ImageIcon className="w-3.5 h-3.5 mr-2" /> Gallery
-            </TabsTrigger>
-            <TabsTrigger value="story" className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-black rounded-none px-0 pb-3 text-[10px] font-bold uppercase tracking-widest text-slate-400 data-[state=active]:text-black transition-all">
-              <FileText className="w-3.5 h-3.5 mr-2" /> Brand Story
-            </TabsTrigger>
-            <TabsTrigger value="hero" className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-black rounded-none px-0 pb-3 text-[10px] font-bold uppercase tracking-widest text-slate-400 data-[state=active]:text-black transition-all">
-              <Layout className="w-3.5 h-3.5 mr-2" /> Hero Section
-            </TabsTrigger>
-            <TabsTrigger value="specialties" className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-black rounded-none px-0 pb-3 text-[10px] font-bold uppercase tracking-widest text-slate-400 data-[state=active]:text-black transition-all">
-              <Plus className="w-3.5 h-3.5 mr-2" /> Specialties
-            </TabsTrigger>
-            <TabsTrigger value="process" className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-black rounded-none px-0 pb-3 text-[10px] font-bold uppercase tracking-widest text-slate-400 data-[state=active]:text-black transition-all">
-              <Settings className="w-3.5 h-3.5 mr-2" /> Process
-            </TabsTrigger>
-            <TabsTrigger value="testimonials" className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-black rounded-none px-0 pb-3 text-[10px] font-bold uppercase tracking-widest text-slate-400 data-[state=active]:text-black transition-all">
-               Testimonials
-            </TabsTrigger>
-            <TabsTrigger value="faq" className="data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-black rounded-none px-0 pb-3 text-[10px] font-bold uppercase tracking-widest text-slate-400 data-[state=active]:text-black transition-all">
-               FAQ
-            </TabsTrigger>
-          </TabsList>
-
-          <div className="flex items-center gap-4 px-4 py-2 bg-slate-50 border border-slate-100 rounded text-slate-400">
-             <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.3)]" />
-             <span className="text-[9px] font-bold uppercase tracking-widest">Connected</span>
-          </div>
-        </div>
-
-        <TabsContent value="gallery" className="mt-0">
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
-            {/* Upload Placeholder */}
-            <label className="aspect-square border-2 border-dashed border-slate-100 rounded-lg flex flex-col items-center justify-center bg-slate-50 hover:bg-white hover:border-black transition-all cursor-pointer group">
-              <input type="file" className="hidden" onChange={handleImageUpload} disabled={uploading} />
-              {uploading ? (
-                <Loader2 className="w-8 h-8 text-slate-300 animate-spin" />
-              ) : (
-                <>
-                  <UploadCloud className="w-8 h-8 text-slate-200 group-hover:text-black transition-colors" />
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 group-hover:text-black mt-3">Add Photo</span>
-                </>
-              )}
-            </label>
-
-            {galleryItems.map((item) => (
-              <div key={item.id} className="aspect-square relative group rounded-lg overflow-hidden border border-slate-100 bg-slate-50">
-                <img src={item.image_url} alt="Gallery" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                  <button 
-                    onClick={() => deleteGalleryItem(item.id)}
-                    className="p-2 bg-white rounded-full text-red-500 hover:bg-red-50 transition-colors"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {pages.map((page) => (
+          <Link key={page.slug} href={`/admin/content/${page.slug}`}>
+            <Card className="group hover:border-black transition-all cursor-pointer border border-slate-200 shadow-sm overflow-hidden h-full">
+              <CardContent className="p-8 flex items-start gap-6">
+                <div className={`p-4 rounded-xl ${page.color} transition-transform group-hover:scale-110`}>
+                  <page.icon className="w-6 h-6" />
                 </div>
-              </div>
-            ))}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="story" className="mt-0">
-          <Card className="border border-slate-200 shadow-sm bg-white rounded-lg overflow-hidden max-w-3xl">
-            <CardHeader className="p-8 border-b border-slate-50 bg-slate-50/50">
-              <CardTitle className="text-xl font-bold tracking-tight text-black flex items-center gap-3">
-                <FileText className="w-5 h-5 text-slate-400" /> Brand Narrative
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-8 space-y-8">
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Section Title</label>
-                <input 
-                  type="text" 
-                  value={brandStory.title}
-                  onChange={(e) => setBrandStory({...brandStory, title: e.target.value})}
-                  className="w-full h-12 bg-slate-50 border border-slate-100 rounded-lg px-4 text-sm font-medium outline-none focus:border-black focus:bg-white transition-all"
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Content</label>
-                <textarea 
-                  rows={10}
-                  value={brandStory.content}
-                  onChange={(e) => setBrandStory({...brandStory, content: e.target.value})}
-                  className="w-full p-4 bg-slate-50 border border-slate-100 rounded-lg text-sm font-medium outline-none focus:border-black focus:bg-white transition-all resize-none leading-relaxed"
-                />
-              </div>
-              <Button 
-                onClick={() => saveContent("brand_story", brandStory)}
-                disabled={saving}
-                className="bg-black hover:bg-zinc-800 text-white px-8 h-12 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all gap-2"
-              >
-                {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                Save Changes
-              </Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="hero" className="mt-0">
-          <Card className="border border-slate-200 shadow-sm bg-white rounded-lg overflow-hidden max-w-3xl">
-            <CardHeader className="p-8 border-b border-slate-50 bg-slate-50/50">
-              <CardTitle className="text-xl font-bold tracking-tight text-black flex items-center gap-3">
-                <Layout className="w-5 h-5 text-slate-400" /> Homepage Hero
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-8 space-y-8">
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Main Heading</label>
-                <input 
-                  type="text" 
-                  value={homeHero.title}
-                  onChange={(e) => setHomeHero({...homeHero, title: e.target.value})}
-                  className="w-full h-12 bg-slate-50 border border-slate-100 rounded-lg px-4 text-sm font-medium outline-none focus:border-black focus:bg-white transition-all"
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Subheading</label>
-                <input 
-                  type="text" 
-                  value={homeHero.subtitle}
-                  onChange={(e) => setHomeHero({...homeHero, subtitle: e.target.value})}
-                  className="w-full h-12 bg-slate-50 border border-slate-100 rounded-lg px-4 text-sm font-medium outline-none focus:border-black focus:bg-white transition-all"
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Button Label</label>
-                <input 
-                  type="text" 
-                  value={homeHero.cta}
-                  onChange={(e) => setHomeHero({...homeHero, cta: e.target.value})}
-                  className="w-full h-12 bg-slate-50 border border-slate-100 rounded-lg px-4 text-sm font-medium outline-none focus:border-black focus:bg-white transition-all"
-                />
-              </div>
-              <Button 
-                onClick={() => saveContent("home_hero", homeHero)}
-                disabled={saving}
-                className="bg-black hover:bg-zinc-800 text-white px-8 h-12 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all gap-2"
-              >
-                {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                Update Hero
-              </Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="process" className="mt-0">
-          <Card className="border border-slate-200 shadow-sm bg-white rounded-lg overflow-hidden max-w-3xl">
-            <CardHeader className="p-8 border-b border-slate-50 bg-slate-50/50">
-              <CardTitle className="text-xl font-bold tracking-tight text-black flex items-center gap-3">
-                <Settings className="w-5 h-5 text-slate-400" /> How It Works
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-8 space-y-8">
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Section Title</label>
-                <input 
-                  type="text" 
-                  value={howItWorks.title}
-                  onChange={(e) => setHowItWorks({...howItWorks, title: e.target.value})}
-                  className="w-full h-12 bg-slate-50 border border-slate-100 rounded-lg px-4 text-sm font-medium outline-none focus:border-black focus:bg-white transition-all"
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Intro Subtitle</label>
-                <input 
-                  type="text" 
-                  value={howItWorks.subtitle}
-                  onChange={(e) => setHowItWorks({...howItWorks, subtitle: e.target.value})}
-                  className="w-full h-12 bg-slate-50 border border-slate-100 rounded-lg px-4 text-sm font-medium outline-none focus:border-black focus:bg-white transition-all"
-                />
-              </div>
-
-              <div className="space-y-4">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Steps (Order 1-3)</label>
-                {howItWorks.steps?.map((step: any, idx: number) => (
-                  <div key={idx} className="p-6 bg-slate-50 rounded-xl border border-slate-100 space-y-4">
-                    <div className="flex justify-between items-center">
-                      <span className="text-[10px] font-bold text-black bg-white px-3 py-1 rounded-full border border-slate-100">Step {step.number}</span>
-                    </div>
-                    <input 
-                      type="text" 
-                      placeholder="Title"
-                      value={step.title}
-                      onChange={(e) => {
-                        const newSteps = [...howItWorks.steps]
-                        newSteps[idx].title = e.target.value
-                        setHowItWorks({...howItWorks, steps: newSteps})
-                      }}
-                      className="w-full h-10 bg-white border border-slate-100 rounded-lg px-4 text-sm font-medium outline-none focus:border-black transition-all"
-                    />
-                    <textarea 
-                      placeholder="Description"
-                      rows={2}
-                      value={step.description}
-                      onChange={(e) => {
-                        const newSteps = [...howItWorks.steps]
-                        newSteps[idx].description = e.target.value
-                        setHowItWorks({...howItWorks, steps: newSteps})
-                      }}
-                      className="w-full p-4 bg-white border border-slate-100 rounded-lg text-sm font-medium outline-none focus:border-black transition-all resize-none"
-                    />
-                  </div>
-                ))}
-              </div>
-
-              <Button 
-                onClick={() => saveContent("how_it_works", howItWorks)}
-                disabled={saving}
-                className="bg-black hover:bg-zinc-800 text-white px-8 h-12 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all gap-2"
-              >
-                {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                Update Process
-              </Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="specialties" className="mt-0">
-          <Card className="border border-slate-200 shadow-sm bg-white rounded-lg overflow-hidden max-w-3xl">
-            <CardHeader className="p-8 border-b border-slate-50 bg-slate-50/50">
-              <CardTitle className="text-xl font-bold tracking-tight text-black flex items-center gap-3">
-                <Plus className="w-5 h-5 text-slate-400" /> Category Specialties
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-8 space-y-8">
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Grid Title</label>
-                <input 
-                  type="text" 
-                  value={specialties.title}
-                  onChange={(e) => setSpecialties({...specialties, title: e.target.value})}
-                  className="w-full h-12 bg-slate-50 border border-slate-100 rounded-lg px-4 text-sm font-medium outline-none focus:border-black focus:bg-white transition-all"
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Intro Text</label>
-                <textarea 
-                  rows={4}
-                  value={specialties.description}
-                  onChange={(e) => setSpecialties({...specialties, description: e.target.value})}
-                  className="w-full p-4 bg-slate-50 border border-slate-100 rounded-lg text-sm font-medium outline-none focus:border-black focus:bg-white transition-all resize-none"
-                />
-              </div>
-              <Button 
-                onClick={() => saveContent("specialties", specialties)}
-                disabled={saving}
-                className="bg-black hover:bg-zinc-800 text-white px-8 h-12 rounded-lg text-[10px] font-bold uppercase tracking-widest transition-all gap-2"
-              >
-                {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                Update Grid
-              </Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        <TabsContent value="testimonials" className="mt-0">
-          <Card className="border border-slate-200 shadow-sm bg-white rounded-lg overflow-hidden max-w-3xl">
-            <CardHeader className="p-8 border-b border-slate-50 bg-slate-50/50">
-              <CardTitle className="text-xl font-bold tracking-tight text-black flex items-center gap-3">
-                 Testimonials
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-8 space-y-8">
-              <div className="space-y-4">
-                {testimonials.list?.map((t: any, idx: number) => (
-                  <div key={idx} className="p-6 bg-slate-50 rounded-xl border border-slate-100 space-y-4 relative">
-                    <button 
-                      onClick={() => {
-                        const newList = [...testimonials.list]
-                        newList.splice(idx, 1)
-                        setTestimonials({...testimonials, list: newList})
-                      }}
-                      className="absolute top-4 right-4 p-2 text-red-500 hover:bg-white rounded-full transition-all"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                    <div className="grid grid-cols-2 gap-4">
-                      <input 
-                        placeholder="Name" 
-                        value={t.name}
-                        onChange={(e) => {
-                          const newList = [...testimonials.list]; newList[idx].name = e.target.value; setTestimonials({...testimonials, list: newList})
-                        }}
-                        className="h-10 bg-white border border-slate-100 rounded-lg px-4 text-sm font-medium outline-none"
-                      />
-                      <input 
-                        placeholder="Role" 
-                        value={t.role}
-                        onChange={(e) => {
-                          const newList = [...testimonials.list]; newList[idx].role = e.target.value; setTestimonials({...testimonials, list: newList})
-                        }}
-                        className="h-10 bg-white border border-slate-100 rounded-lg px-4 text-sm font-medium outline-none"
-                      />
-                    </div>
-                    <textarea 
-                      placeholder="Testimonial Text"
-                      value={t.text}
-                      onChange={(e) => {
-                        const newList = [...testimonials.list]; newList[idx].text = e.target.value; setTestimonials({...testimonials, list: newList})
-                      }}
-                      className="w-full p-4 bg-white border border-slate-100 rounded-lg text-sm font-medium outline-none resize-none"
-                    />
-                  </div>
-                ))}
-                <Button 
-                  variant="outline" 
-                  onClick={() => setTestimonials({...testimonials, list: [...(testimonials.list || []), {name: "", role: "", text: "", rating: 5}]})}
-                  className="w-full border-dashed py-8 text-slate-400 hover:text-black hover:border-black"
-                >
-                  <Plus className="w-4 h-4 mr-2" /> Add Testimonial
-                </Button>
-              </div>
-              <Button 
-                onClick={() => saveContent("testimonials", testimonials)}
-                disabled={saving}
-                className="bg-black text-white px-8 h-12 rounded-lg text-[10px] font-bold uppercase tracking-widest gap-2"
-              >
-                {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                Save Testimonials
-              </Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="faq" className="mt-0">
-          <Card className="border border-slate-200 shadow-sm bg-white rounded-lg overflow-hidden max-w-3xl">
-            <CardHeader className="p-8 border-b border-slate-50 bg-slate-50/50">
-              <CardTitle className="text-xl font-bold tracking-tight text-black flex items-center gap-3">
-                 Frequently Asked Questions
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-8 space-y-8">
-              <div className="space-y-4">
-                {faqs.questions?.map((q: any, idx: number) => (
-                  <div key={idx} className="p-6 bg-slate-50 rounded-xl border border-slate-100 space-y-4 relative">
-                    <button 
-                      onClick={() => {
-                        const newList = [...faqs.questions]; newList.splice(idx, 1); setFaqs({...faqs, questions: newList})
-                      }}
-                      className="absolute top-4 right-4 p-2 text-red-500 hover:bg-white rounded-full transition-all"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                    <input 
-                      placeholder="Question" 
-                      value={q.question}
-                      onChange={(e) => {
-                        const newList = [...faqs.questions]; newList[idx].question = e.target.value; setFaqs({...faqs, questions: newList})
-                      }}
-                      className="w-full h-10 bg-white border border-slate-100 rounded-lg px-4 text-sm font-medium outline-none"
-                    />
-                    <textarea 
-                      placeholder="Answer"
-                      rows={3}
-                      value={q.answer}
-                      onChange={(e) => {
-                        const newList = [...faqs.questions]; newList[idx].answer = e.target.value; setFaqs({...faqs, questions: newList})
-                      }}
-                      className="w-full p-4 bg-white border border-slate-100 rounded-lg text-sm font-medium outline-none resize-none"
-                    />
-                  </div>
-                ))}
-                <Button 
-                  variant="outline" 
-                  onClick={() => setFaqs({...faqs, questions: [...(faqs.questions || []), {question: "", answer: ""}]})}
-                  className="w-full border-dashed py-8 text-slate-400 hover:text-black hover:border-black"
-                >
-                  <Plus className="w-4 h-4 mr-2" /> Add FAQ Item
-                </Button>
-              </div>
-              <Button 
-                onClick={() => saveContent("faqs", faqs)}
-                disabled={saving}
-                className="bg-black text-white px-8 h-12 rounded-lg text-[10px] font-bold uppercase tracking-widest gap-2"
-              >
-                {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                Save FAQs
-              </Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+                <div className="flex-1 space-y-1">
+                  <h3 className="font-bold text-lg text-black flex items-center justify-between">
+                    {page.title}
+                    <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+                  </h3>
+                  <p className="text-sm text-slate-400 leading-relaxed">{page.description}</p>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+        ))}
+      </div>
     </div>
   )
 }

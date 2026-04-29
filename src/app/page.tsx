@@ -71,16 +71,21 @@ export default async function Home() {
       <HeroSection 
         title={homeHero.title} 
         subtitle={homeHero.subtitle} 
+        image={homeHero.image}
       />
-      <AboutPreview data={brandStory} />
+      <AboutPreview 
+        data={brandStory} 
+        image={brandStory.image}
+      />
       <CategoryGrid 
         title={specialties.title} 
         description={specialties.description} 
+        items={categoriesList.items}
       />
-      <HowItWorks />
+      <HowItWorks data={howItWorks} />
       <PortfolioPreview cakes={recentCakes} />
-      <Testimonials />
-      <FAQ />
+      <Testimonials data={testimonials} />
+      <FAQ data={faqs} />
       <CTABanner phone={SITE_CONFIG.contact.phone} />
     </main>
   );

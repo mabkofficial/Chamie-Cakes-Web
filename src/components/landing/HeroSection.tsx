@@ -10,10 +10,12 @@ import { SITE_CONFIG } from "@/lib/config";
 
 export default function HeroSection({ 
   title = "Custom Cakes for Life's Sweetest Moments", 
-  subtitle = SITE_CONFIG.description
+  subtitle = SITE_CONFIG.description,
+  image = "/images/hero.png"
 }: { 
   title?: string; 
   subtitle?: string; 
+  image?: string;
 }) {
   return (
     <section className="relative w-full h-screen min-h-[700px] flex items-center overflow-hidden bg-white">
@@ -87,7 +89,7 @@ export default function HeroSection({
               
               <div className="relative h-full w-full rounded-xl overflow-hidden shadow-2xl">
                 <Image
-                  src="/images/hero.png"
+                  src={image}
                   alt="Beautiful custom tiered cake by Chamie Cakes"
                   fill
                   className="object-cover"

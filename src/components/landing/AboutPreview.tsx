@@ -8,7 +8,13 @@ import { Badge } from "@/components/ui/badge";
 import { Heading } from "@/components/ui/heading";
 import { Section } from "@/components/layout/Section";
 
-export default function AboutPreview({ data }: { data?: { title: string, content: string } }) {
+export default function AboutPreview({ 
+  data,
+  image = "/images/about-chamie.png" 
+}: { 
+  data?: { title: string, content: string },
+  image?: string
+}) {
   const content = data?.content || "Hi, I'm Chamie! I believe that every celebration deserves a centerpiece as unique and special as the person it's for.";
   const title = data?.title || "Made for your sweetest celebrations.";
 
@@ -26,7 +32,7 @@ export default function AboutPreview({ data }: { data?: { title: string, content
           <div className="relative aspect-square w-full max-w-lg mx-auto">
             <div className="relative h-full w-full rounded-xl overflow-hidden shadow-2xl">
               <Image
-                src="/images/about-chamie.png"
+                src={image}
                 alt="Chamie Rochelle, Professional Cake Artist"
                 fill
                 className="object-cover"

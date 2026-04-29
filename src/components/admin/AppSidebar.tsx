@@ -53,9 +53,24 @@ const data = {
       icon: Users,
     },
     {
-      title: "Website Content",
-      url: "/admin/content",
-      icon: ImageIcon,
+      title: "Pages",
+      url: "#",
+      icon: LayoutDashboard,
+      isActive: true,
+      items: [
+        {
+          title: "Home",
+          url: "/admin/content/home",
+        },
+        {
+          title: "Gallery",
+          url: "/admin/content/gallery",
+        },
+        {
+          title: "About",
+          url: "/admin/content/about",
+        },
+      ],
     },
     {
       title: "Menu",
